@@ -12,5 +12,17 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
+
+
+Route::get('/login', function () {
+    return view('login');
+});
+
+Route::get('/admin', function () {
+    return view('admin');
+});
+
+
+Route::post('/halls/add', 'HallsController@store')->name('halls_add');
