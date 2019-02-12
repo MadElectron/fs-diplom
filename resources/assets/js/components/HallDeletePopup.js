@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import HallAddForm from './HallAddForm';
+import HallDeleteForm from './HallDeleteForm';
 
 export default class HallAddPopup extends Component {
     constructor(props) {
@@ -36,22 +36,22 @@ export default class HallAddPopup extends Component {
         }
 
         return (
-            <div className={className}>
-              <div className="popup__container">
-                <div className="popup__content">
-                  <div className="popup__header">
-                    <h2 className="popup__title">
-                      Добавление зала
-                      <a className="popup__dismiss" href="#"><img src="i/close.png" alt="Закрыть" onClick={this.close} /></a>
-                    </h2>
+          <div className={className}>
+            <div className="popup__container">
+              <div className="popup__content">
+                <div className="popup__header">
+                  <h2 className="popup__title">
+                    Удаление зала
+                    <a className="popup__dismiss" href="#" onClick={this.close}><img src="i/close.png" alt="Закрыть" /></a>
+                  </h2>
 
-                  </div>
-                  <div className="popup__wrapper">
-                    <HallAddForm handler={this.close}/>
-                  </div>
+                </div>
+                <div className="popup__wrapper">
+                    <HallDeleteForm handler={this.close} deletedHall={this.props.deletedHall} />
                 </div>
               </div>
             </div>
+          </div>
         );
     }
 }

@@ -228,6 +228,11 @@ input[type='radio'], input[type='submit'], button, .conf-step__header, select {
   font-weight: 400;
   color: $black;
   margin-bottom: 12px;
+
+  span {
+    font-weight: bold;
+    font-style: italic;
+  }
 }
 
 .conf-step__paragraph:not(:first-of-type) {
@@ -733,5 +738,52 @@ input[type='radio'], input[type='submit'], button, .conf-step__header, select {
         transition: .3s all ease;
       }
     }
+  }
+}
+
+.react-contextmenu {
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+  color: #393939;
+  font-size: 16px;
+  margin: 2px 0 0;
+  min-width: 160px;
+  outline: none;
+  opacity: 0;
+  padding: 5px 0;
+  pointer-events: none;
+  text-align: left;
+  transition: opacity 250ms ease !important;
+
+  // .conf-step__row &-wrapper {
+  //   display: inline-block;
+  //   margin-left: 10px;
+  // }
+
+  &--visible {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 9999;
+  }
+
+  &-item {
+    background: 0 0;
+    border: 0;
+    color: #393939;
+    cursor: pointer;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 3px 20px;
+    text-align: inherit;
+    white-space: nowrap;
+    
+    &--active, &--selected {
+      color: #fff;
+      background-color: #16A6AF;
+      border-color: #16A6AF;
+    }
+
   }
 }

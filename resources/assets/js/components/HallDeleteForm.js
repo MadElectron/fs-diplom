@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class HallAddForm extends Component {
+export default class HallDeleteForm extends Component {
     constructor(props) {
       super(props);
 
@@ -11,29 +11,34 @@ export default class HallAddForm extends Component {
       e.preventDefault();
 
       const formData = new FormData(e.target);
+      const url = `/halls/delete/${this.props.deletedHall.id}`;
 
-      fetch('/halls/add',{
+      fetch(url, {
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         },
         body: formData
       }).then(
-        () => document.location.reload() // Don't know how to rerender the Hall list only :-(
+        () => document.location.reload()
       );
 
       this.props.handler();
     }
 
     render() {
+
+      let title = null;
+
+      if (this.props.deletedHall !== undefined) {
+        title = this.props.deletedHall.title;
+      }
+
       return (
         <form acceptCharset="utf-8" onSubmit={this.handleSubmit}>
-          <label className="conf-step__label conf-step__label-fullsize" htmlFor="name">
-            Название зала
-            <input className="conf-step__input" type="text" placeholder="Например, &laquo;Зал 1&raquo;" name="title" required/>
-          </label>
+          <p className="conf-step__paragraph">Вы действительно хотите удалить зал <span>{title}</span>?</p>
           <div className="conf-step__buttons text-center">
-            <input type="submit" value="Добавить зал" className="conf-step__button conf-step__button-accent" />
+            <input type="submit" value="Удалить" className="conf-step__button conf-step__button-accent" />
             <button className="conf-step__button conf-step__button-regular" onClick={this.props.handler}>Отменить</button>            
           </div>
         </form>

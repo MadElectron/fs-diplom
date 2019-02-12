@@ -2,44 +2,76 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import HallAddButton from './HallAddButton';
 import HallAddPopup from './HallAddPopup';
+import HallDeletePopup from './HallDeletePopup';
 
 export default class HallManagementBlock extends Component {
     constructor(props) {
       super(props);
 
       this.state = {
-        popupOn: false
+        createPopupOn: false,
+        deletePopupOn: false,
+        data: null,
+        deleteId: null,
       };
 
-      this.handleClick = this.handleClick.bind(this);
-
+      this.handleCreateClick = this.handleCreateClick.bind(this);
+      this.handleDeleteClick = this.handleDeleteClick.bind(this);
     }
 
-    handleClick() {
-      console.log('click');
+    handleCreateClick() {
       this.setState({
-        popupOn: !this.state.popupOn
+        createPopupOn: true
       });
     }
 
+    handleDeleteClick(el, e) {
+      this.setState({
+        deletePopupOn: true,
+        deletedHall: el
+      }); 
+    }
+
     componentDidUpdate() {
-      console.log('update');
         if (document.getElementById('popups')) {
-          console.log('rerender');
-          ReactDOM.render(<HallAddPopup active={this.state.popupOn}/>, document.getElementById('popups'));
+
+          ReactDOM.render(
+            <div>
+              <HallAddPopup active={this.state.createPopupOn}/>
+              <HallDeletePopup active={this.state.deletePopupOn} deletedHall={this.state.deletedHall}/>
+            </div>
+            , document.getElementById('popups'));
         }
     }
 
-    render() {
+    buildHallList() {
+      if (!this.props.data) {
+        return null;
+      }
 
+      const result = [];
+
+      this.props.data.forEach((el, index) => result.push(
+        <li key={index}>
+          {el.title} 
+          <button className="conf-step__button conf-step__button-trash" onClick={e => this.handleDeleteClick(el, e)}></button>
+          </li>
+      ));
+
+      return result.length ? result : <p>Нет доступных залов</p>;
+    }
+
+    render() {
       return (
-        <div>
-          <HallAddButton handler={this.handleClick} />
+        <div className="conf-step__wrapper">
+          <div>
+            <ul className="conf-step__list">
+              <p className="conf-step__paragraph">Доступные залы:</p>
+              {this.buildHallList()}
+            </ul>
+            <button className="conf-step__button conf-step__button-accent" onClick={this.handleCreateClick}>Создать зал</button>
+          </div>
         </div>
       );
     }
-}
-
-if (document.getElementById('root')) {
-  ReactDOM.render(<HallManagementBlock />, document.getElementById('root'));
 }

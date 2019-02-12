@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Hall;
-use App\Place;
+use App\PlaceTypePrice;
 
-class HallsController extends Controller
+class PlaceTypePricesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,15 +33,20 @@ class HallsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $hallId)
     {
-        $hall = Hall::create([
-            'title' => $request->title,
-            'rows' => 0,
-            'places_in_row' => 0,
-        ]);
+        $data = json_decode($request->getContent(), true);
 
-        return response('Hall added');
+        foreach($data as $type => $price) {
+            PlaceTypePrice::create([
+                'type' => $type,
+                'hall_id' => $hallId,
+                'price' => $price
+            ]);    
+        }
+        
+
+        return response('Price set to hall places');
     }
 
     /**
@@ -51,16 +55,9 @@ class HallsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show($id)
     {
-        if ($id) {
-            $result = Hall::where('id','=', $id);
-        } else {
-            $result = Hall::all();
-        }
-
-        return response($result->toJson())
-            ->header('Content-Type', 'application/json');
+        //
     }
 
     /**
@@ -94,8 +91,6 @@ class HallsController extends Controller
      */
     public function destroy($id)
     {
-        Hall::where('id','=', $id)->delete();
-
-        return response('Hall deleted');
+        //
     }
 }

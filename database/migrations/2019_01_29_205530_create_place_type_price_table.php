@@ -13,7 +13,7 @@ class CreatePlaceTypePriceTable extends Migration
      */
     public function up()
     {
-        Schema::create('place_type_price', function (Blueprint $table) {
+        Schema::create('place_type_prices', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hall_id')->unsigned();
             $table->integer('type');
@@ -29,10 +29,10 @@ class CreatePlaceTypePriceTable extends Migration
      */
     public function down()
     {
-        Schema::table('place_type_price', function (Blueprint $table) {
+        Schema::table('place_type_prices', function (Blueprint $table) {
             $table->dropForeign(['hall_id']);
         });
 
-        Schema::dropIfExists('place_type_price');
+        Schema::dropIfExists('place_type_prices');
     }
 }

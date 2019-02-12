@@ -26,3 +26,11 @@ Route::get('/admin', function () {
 
 
 Route::post('/halls/add', 'HallsController@store')->name('halls_add');
+Route::post('/halls/list', 'HallsController@show')->name('halls_list');
+Route::post('/halls/delete/{id}', 'HallsController@destroy')->name('halls_delete');
+
+Route::post('/places/add/{hallId}', 'PlacesController@store')->name('places_add');
+Route::post('/places/list', 'PlacesController@show')->name('places_list');
+Route::post('/places/delete/{id}', 'PlacesController@destroy')->name('places_delete');
+
+Route::post('/place-type-prices/add/{hallId}', 'PlaceTypePricesController@store')->name('place_type_prices_add');

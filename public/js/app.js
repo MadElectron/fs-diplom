@@ -60518,7 +60518,11 @@ __webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
  */
 
 
+__webpack_require__(/*! ./components/App */ "./resources/assets/js/components/App.js");
+
 __webpack_require__(/*! ./components/HallManagementBlock */ "./resources/assets/js/components/HallManagementBlock.js");
+
+__webpack_require__(/*! ./components/HallConfigurationBlock */ "./resources/assets/js/components/HallConfigurationBlock.js");
 
 /***/ }),
 
@@ -60577,6 +60581,134 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/App.js":
+/*!***********************************************!*\
+  !*** ./resources/assets/js/components/App.js ***!
+  \***********************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _HallManagementBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HallManagementBlock */ "./resources/assets/js/components/HallManagementBlock.js");
+/* harmony import */ var _HallConfigurationBlock__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./HallConfigurationBlock */ "./resources/assets/js/components/HallConfigurationBlock.js");
+/* harmony import */ var _HallPriceBlock__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./HallPriceBlock */ "./resources/assets/js/components/HallPriceBlock.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+
+var App =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(App, _Component);
+
+  function App(props) {
+    var _this;
+
+    _classCallCheck(this, App);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
+    _this.state = {
+      data: null
+    };
+    return _this;
+  }
+
+  _createClass(App, [{
+    key: "getHallList",
+    value: function getHallList() {
+      return fetch('/halls/list', {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      }).then(function (resp) {
+        return resp.json();
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.getHallList().then(function (json) {
+        _this2.setState({
+          data: json
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+        className: "conf-step"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
+        className: "conf-step__header conf-step__header_opened"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "conf-step__title"
+      }, "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043B\u0430\u043C\u0438")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallManagementBlock__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        data: this.state.data
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+        className: "conf-step"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
+        className: "conf-step__header conf-step__header_opened"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "conf-step__title"
+      }, "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u0437\u0430\u043B\u043E\u0432")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u043B \u0434\u043B\u044F \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallConfigurationBlock__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        data: this.state.data
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+        className: "conf-step"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
+        className: "conf-step__header conf-step__header_opened"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "conf-step__title"
+      }, "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u0446\u0435\u043D")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u043B \u0434\u043B\u044F \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallPriceBlock__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        data: this.state.data
+      }))));
+    }
+  }]);
+
+  return App;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+if (document.getElementById('app')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(App, null), document.getElementById('app'));
+}
 
 /***/ }),
 
@@ -60692,22 +60824,22 @@ function (_Component) {
     value: function handleSubmit(e) {
       e.preventDefault();
       var formData = new FormData(e.target);
-      console.log(e.target);
       fetch('/halls/add', {
         method: "POST",
         headers: {
-          // 'Content-Type': 'multipart/form-data',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: formData
-      });
+      }).then(function () {
+        return document.location.reload();
+      } // Don't know how to rerender the Hall list only :-(
+      );
       this.props.handler();
     }
   }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        method: "post",
         acceptCharset: "utf-8",
         onSubmit: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -60725,8 +60857,7 @@ function (_Component) {
         type: "submit",
         value: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0437\u0430\u043B",
         className: "conf-step__button conf-step__button-accent"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#",
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "conf-step__button conf-step__button-regular",
         onClick: this.props.handler
       }, "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C")));
@@ -60795,8 +60926,20 @@ function (_Component) {
   _createClass(HallAddPopup, [{
     key: "close",
     value: function close(e) {
+      if (e !== undefined) {
+        // Popup closed manually
+        e.preventDefault();
+      }
+
       this.setState({
         active: false
+      });
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(props) {
+      this.setState({
+        active: props.active
       });
     }
   }, {
@@ -60840,22 +60983,22 @@ function (_Component) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/components/HallManagementBlock.js":
-/*!***************************************************************!*\
-  !*** ./resources/assets/js/components/HallManagementBlock.js ***!
-  \***************************************************************/
+/***/ "./resources/assets/js/components/HallConfigurationBlock.js":
+/*!******************************************************************!*\
+  !*** ./resources/assets/js/components/HallConfigurationBlock.js ***!
+  \******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallManagementBlock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallConfigurationBlock; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _HallAddButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HallAddButton */ "./resources/assets/js/components/HallAddButton.js");
-/* harmony import */ var _HallAddPopup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./HallAddPopup */ "./resources/assets/js/components/HallAddPopup.js");
+/* harmony import */ var _HallScheme__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HallScheme */ "./resources/assets/js/components/HallScheme.js");
+/* harmony import */ var _HallRows__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./HallRows */ "./resources/assets/js/components/HallRows.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -60879,6 +61022,374 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+var HallConfigurationBlock =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HallConfigurationBlock, _Component);
+
+  function HallConfigurationBlock(props) {
+    var _this;
+
+    _classCallCheck(this, HallConfigurationBlock);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(HallConfigurationBlock).call(this, props));
+    _this.state = {
+      selectedHall: null,
+      selectedHallRows: null,
+      selectedHallPlaces: null
+    };
+    _this.handleHallSelect = _this.handleHallSelect.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleHallRowsChange = _this.handleHallRowsChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleHallPlacesChange = _this.handleHallPlacesChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  } // @ TODO: общий класс, с этим методом
+
+
+  _createClass(HallConfigurationBlock, [{
+    key: "handleHallSelect",
+    value: function handleHallSelect(el, e) {
+      this.setState({
+        selectedHall: el
+      });
+    }
+  }, {
+    key: "handleHallRowsChange",
+    value: function handleHallRowsChange(e) {
+      this.setState({
+        selectedHallRows: e.target.value
+      });
+    }
+  }, {
+    key: "handleHallPlacesChange",
+    value: function handleHallPlacesChange(e) {
+      this.setState({
+        selectedHallPlaces: e.target.value
+      });
+    }
+  }, {
+    key: "handleCancel",
+    value: function handleCancel() {
+      this.setState({
+        selectedHallRows: null,
+        selectedHallPlaces: null
+      });
+    }
+  }, {
+    key: "buildHallList",
+    value: function buildHallList() {
+      var _this2 = this;
+
+      if (!this.props.data) {
+        return null;
+      }
+
+      var result = [];
+      this.props.data.forEach(function (el, index) {
+        return result.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: index
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          type: "radio",
+          className: "conf-step__radio",
+          name: "chairs-hall",
+          value: el.title,
+          onChange: function onChange(e) {
+            return _this2.handleHallSelect(el, e);
+          }
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "conf-step__selector"
+        }, el.title)));
+      });
+      return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var hallRows = null;
+      var hallScheme = null;
+      console.log(this.state); // @TODO: Это работает только если пустой зал
+
+      if (this.state.selectedHall) {
+        hallRows = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallRows__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          rowsHandler: this.handleHallRowsChange,
+          placesHandler: this.handleHallPlacesChange
+        });
+      }
+
+      if (this.state.selectedHallRows && this.state.selectedHallPlaces) {
+        hallScheme = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallScheme__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          hall: this.state.selectedHall,
+          rows: this.state.selectedHallRows,
+          places: this.state.selectedHallPlaces,
+          handleCancel: this.handleCancel
+        });
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "conf-step__selectors-box"
+      }, this.buildHallList()), hallRows, hallScheme);
+    }
+  }]);
+
+  return HallConfigurationBlock;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/HallDeleteForm.js":
+/*!**********************************************************!*\
+  !*** ./resources/assets/js/components/HallDeleteForm.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallDeleteForm; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+var HallDeleteForm =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HallDeleteForm, _Component);
+
+  function HallDeleteForm(props) {
+    var _this;
+
+    _classCallCheck(this, HallDeleteForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(HallDeleteForm).call(this, props));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(HallDeleteForm, [{
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      var formData = new FormData(e.target);
+      var url = "/halls/delete/".concat(this.props.deletedHall.id);
+      fetch(url, {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+      }).then(function () {
+        return document.location.reload();
+      });
+      this.props.handler();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var title = null;
+
+      if (this.props.deletedHall !== undefined) {
+        title = this.props.deletedHall.title;
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        acceptCharset: "utf-8",
+        onSubmit: this.handleSubmit
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0437\u0430\u043B ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, title), "?"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__buttons text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "submit",
+        value: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C",
+        className: "conf-step__button conf-step__button-accent"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-regular",
+        onClick: this.props.handler
+      }, "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C")));
+    }
+  }]);
+
+  return HallDeleteForm;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/HallDeletePopup.js":
+/*!***********************************************************!*\
+  !*** ./resources/assets/js/components/HallDeletePopup.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallAddPopup; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _HallDeleteForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HallDeleteForm */ "./resources/assets/js/components/HallDeleteForm.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+
+var HallAddPopup =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HallAddPopup, _Component);
+
+  function HallAddPopup(props) {
+    var _this;
+
+    _classCallCheck(this, HallAddPopup);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(HallAddPopup).call(this, props));
+    _this.state = {
+      active: _this.props.active
+    };
+    _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(HallAddPopup, [{
+    key: "close",
+    value: function close(e) {
+      if (e !== undefined) {
+        // Popup closed manually
+        e.preventDefault();
+      }
+
+      this.setState({
+        active: false
+      });
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(props) {
+      this.setState({
+        active: props.active
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var className = "popup";
+
+      if (this.state.active) {
+        className += " active";
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: className
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__content"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__header"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "popup__title"
+      }, "\u0423\u0434\u0430\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043B\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        className: "popup__dismiss",
+        href: "#",
+        onClick: this.close
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "i/close.png",
+        alt: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallDeleteForm__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        handler: this.close,
+        deletedHall: this.props.deletedHall
+      })))));
+    }
+  }]);
+
+  return HallAddPopup;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/HallManagementBlock.js":
+/*!***************************************************************!*\
+  !*** ./resources/assets/js/components/HallManagementBlock.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallManagementBlock; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _HallAddButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HallAddButton */ "./resources/assets/js/components/HallAddButton.js");
+/* harmony import */ var _HallAddPopup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./HallAddPopup */ "./resources/assets/js/components/HallAddPopup.js");
+/* harmony import */ var _HallDeletePopup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./HallDeletePopup */ "./resources/assets/js/components/HallDeletePopup.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+
+
+
+
 var HallManagementBlock =
 /*#__PURE__*/
 function (_Component) {
@@ -60891,38 +61402,78 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(HallManagementBlock).call(this, props));
     _this.state = {
-      popupOn: false
+      createPopupOn: false,
+      deletePopupOn: false,
+      data: null,
+      deleteId: null
     };
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleCreateClick = _this.handleCreateClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleDeleteClick = _this.handleDeleteClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
   _createClass(HallManagementBlock, [{
-    key: "handleClick",
-    value: function handleClick() {
-      console.log('click');
+    key: "handleCreateClick",
+    value: function handleCreateClick() {
       this.setState({
-        popupOn: !this.state.popupOn
+        createPopupOn: true
+      });
+    }
+  }, {
+    key: "handleDeleteClick",
+    value: function handleDeleteClick(el, e) {
+      this.setState({
+        deletePopupOn: true,
+        deletedHall: el
       });
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      console.log('update');
-
       if (document.getElementById('popups')) {
-        console.log('rerender');
-        react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallAddPopup__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          active: this.state.popupOn
-        }), document.getElementById('popups'));
+        react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallAddPopup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          active: this.state.createPopupOn
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallDeletePopup__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          active: this.state.deletePopupOn,
+          deletedHall: this.state.deletedHall
+        })), document.getElementById('popups'));
       }
+    }
+  }, {
+    key: "buildHallList",
+    value: function buildHallList() {
+      var _this2 = this;
+
+      if (!this.props.data) {
+        return null;
+      }
+
+      var result = [];
+      this.props.data.forEach(function (el, index) {
+        return result.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: index
+        }, el.title, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "conf-step__button conf-step__button-trash",
+          onClick: function onClick(e) {
+            return _this2.handleDeleteClick(el, e);
+          }
+        })));
+      });
+      return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
     }
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallAddButton__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        handler: this.handleClick
-      }));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "conf-step__list"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u0437\u0430\u043B\u044B:"), this.buildHallList()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-accent",
+        onClick: this.handleCreateClick
+      }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0437\u0430\u043B")));
     }
   }]);
 
@@ -60931,9 +61482,534 @@ function (_Component) {
 
 
 
-if (document.getElementById('root')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(HallManagementBlock, null), document.getElementById('root'));
+/***/ }),
+
+/***/ "./resources/assets/js/components/HallPriceBlock.js":
+/*!**********************************************************!*\
+  !*** ./resources/assets/js/components/HallPriceBlock.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallConfigurationBlock; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _HallPrices__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HallPrices */ "./resources/assets/js/components/HallPrices.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+
+
+var HallConfigurationBlock =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HallConfigurationBlock, _Component);
+
+  function HallConfigurationBlock(props) {
+    var _this;
+
+    _classCallCheck(this, HallConfigurationBlock);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(HallConfigurationBlock).call(this, props));
+    _this.state = {
+      selectedHall: null,
+      selectedHallStandartPrice: null,
+      selectedHallVipPrice: null
+    };
+    _this.handleHallSelect = _this.handleHallSelect.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleHallStandartPriceChange = _this.handleHallStandartPriceChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleHallVipPriceChange = _this.handleHallVipPriceChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(HallConfigurationBlock, [{
+    key: "handleHallSelect",
+    value: function handleHallSelect(el, e) {
+      this.setState({
+        selectedHall: el
+      });
+    }
+  }, {
+    key: "handleHallStandartPriceChange",
+    value: function handleHallStandartPriceChange(e) {
+      this.setState({
+        selectedHallStandartPrice: e.target.value
+      });
+    }
+  }, {
+    key: "handleHallVipPriceChange",
+    value: function handleHallVipPriceChange(e) {
+      this.setState({
+        selectedHallVipPrice: e.target.value
+      });
+    }
+  }, {
+    key: "handleCancel",
+    value: function handleCancel() {
+      this.setState({
+        selectedHallStandartPrice: null,
+        selectedHallVipPrice: null
+      });
+    }
+  }, {
+    key: "handleSave",
+    value: function handleSave() {
+      console.log('prices:', this.state);
+      var hall = this.state.selectedHall;
+      var data = {
+        0: this.state.selectedHallStandartPrice,
+        1: this.state.selectedHallVipPrice
+      };
+      fetch("/place-type-prices/add/".concat(hall.id), {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(data)
+      }).then(function (resp) {
+        return console.log(resp);
+      });
+    }
+  }, {
+    key: "buildHallList",
+    value: function buildHallList() {
+      var _this2 = this;
+
+      if (!this.props.data) {
+        return null;
+      }
+
+      var result = [];
+      this.props.data.forEach(function (el, index) {
+        return result.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: index
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          type: "radio",
+          className: "conf-step__radio",
+          name: "chairs-hall",
+          value: el.title,
+          onChange: function onChange(e) {
+            return _this2.handleHallSelect(el, e);
+          }
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "conf-step__selector"
+        }, el.title)));
+      });
+      return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var hallPrices = null;
+      var disabled; // @TODO: Это работает только если зал без цен
+
+      if (this.state.selectedHall) {
+        hallPrices = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallPrices__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          standartPriceHandler: this.handleHallStandartPriceChange,
+          vipPriceHandler: this.handleHallVipPriceChange
+        });
+      } // @ TODO: не работает
+
+
+      if (this.state.selectedHallStandartPrices && this.state.selectedHallVipPrices) {
+        disabled = 'disabled';
+      } else {
+        disabled = '';
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "conf-step__selectors-box"
+      }, this.buildHallList()), hallPrices, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("fieldset", {
+        className: "conf-step__buttons text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-regular"
+      }, "\u041E\u0442\u043C\u0435\u043D\u0430"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "submit",
+        value: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C",
+        className: "conf-step__button conf-step__button-accent",
+        disabled: disabled,
+        onClick: this.handleSave
+      })));
+    }
+  }]);
+
+  return HallConfigurationBlock;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/HallPrices.js":
+/*!******************************************************!*\
+  !*** ./resources/assets/js/components/HallPrices.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallPrices; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var HallPrices =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HallPrices, _Component);
+
+  function HallPrices(props) {
+    _classCallCheck(this, HallPrices);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(HallPrices).call(this, props));
+  }
+
+  _createClass(HallPrices, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u0446\u0435\u043D\u044B \u0434\u043B\u044F \u0442\u0438\u043F\u043E\u0432 \u043A\u0440\u0435\u0441\u0435\u043B:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__legend"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label"
+      }, "\u0426\u0435\u043D\u0430, \u0440\u0443\u0431\u043B\u0435\u0439", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "conf-step__input",
+        placeholder: "0",
+        onChange: this.props.standartPriceHandler
+      })), "\u0437\u0430 ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "conf-step__chair conf-step__chair_standart"
+      }), " \u043E\u0431\u044B\u0447\u043D\u044B\u0435 \u043A\u0440\u0435\u0441\u043B\u0430"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__legend"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label"
+      }, "\u0426\u0435\u043D\u0430, \u0440\u0443\u0431\u043B\u0435\u0439", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "conf-step__input",
+        placeholder: "0",
+        onChange: this.props.vipPriceHandler
+      })), "\u0437\u0430 ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "conf-step__chair conf-step__chair_vip"
+      }), " VIP \u043A\u0440\u0435\u0441\u043B\u0430"));
+    }
+  }]);
+
+  return HallPrices;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/HallRows.js":
+/*!****************************************************!*\
+  !*** ./resources/assets/js/components/HallRows.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallRows; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var HallRows =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HallRows, _Component);
+
+  function HallRows(props) {
+    _classCallCheck(this, HallRows);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(HallRows).call(this, props));
+  }
+
+  _createClass(HallRows, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0440\u044F\u0434\u043E\u0432 \u0438 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043A\u0440\u0435\u0441\u0435\u043B \u0432 \u0440\u044F\u0434\u0443:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__legend"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label"
+      }, "\u0420\u044F\u0434\u043E\u0432, \u0448\u0442", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "conf-step__input",
+        placeholder: "10",
+        onChange: this.props.rowsHandler
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "multiplier"
+      }, "x"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label"
+      }, "\u041C\u0435\u0441\u0442, \u0448\u0442", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "conf-step__input",
+        placeholder: "8",
+        onChange: this.props.placesHandler
+      }))));
+    }
+  }]);
+
+  return HallRows;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/HallScheme.js":
+/*!******************************************************!*\
+  !*** ./resources/assets/js/components/HallScheme.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallScheme; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+var TYPES = ['disables', 'standart', 'vip'];
+
+function matrix(rows, cols, value) {
+  return new Array(parseInt(rows)).fill(new Array(parseInt(cols)).fill(value));
 }
+
+var HallScheme =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HallScheme, _Component);
+
+  function HallScheme(props) {
+    var _this;
+
+    _classCallCheck(this, HallScheme);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(HallScheme).call(this, props));
+    _this.state = {
+      hall: _this.props.hall,
+      rows: _this.props.rows,
+      places: _this.props.places,
+      placeMatrix: matrix(_this.props.rows, _this.props.places, 1)
+    };
+    _this.changeType = _this.changeType.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_assertThisInitialized(_this))); // this.componentWillMount = this.componentWillMount.bind(this);
+
+    return _this;
+  }
+
+  _createClass(HallScheme, [{
+    key: "changeType",
+    value: function changeType(e) {
+      var _e$target$getAttribut = e.target.getAttribute('data-key').split('_'),
+          _e$target$getAttribut2 = _slicedToArray(_e$target$getAttribut, 2),
+          row = _e$target$getAttribut2[0],
+          place = _e$target$getAttribut2[1];
+
+      var placeMatrix = this.state.placeMatrix;
+      var type = parseInt(e.target.getAttribute('data-type'));
+      var newType = ++type % 3;
+      placeMatrix[row][place] = newType;
+      this.setState({
+        placeMatrix: placeMatrix
+      });
+      TYPES.forEach(function (c) {
+        return e.target.classList.remove("conf-step__chair_".concat(c));
+      });
+      e.target.classList.add("conf-step__chair_".concat(TYPES[newType]));
+      e.target.setAttribute('data-type', newType);
+    }
+  }, {
+    key: "buildPlacesScheme",
+    value: function buildPlacesScheme() {
+      var rows = [];
+
+      for (var i = 0; i < this.state.rows; i++) {
+        var rowPlaces = [];
+
+        for (var j = 0; j < this.state.places; j++) {
+          rowPlaces.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            key: "".concat(i, "_").concat(j),
+            "data-key": "".concat(i, "_").concat(j),
+            "data-type": 1,
+            className: "conf-step__chair conf-step__chair_standart",
+            onClick: this.changeType
+          }));
+        }
+
+        rows.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: i,
+          className: "conf-step__row"
+        }, rowPlaces));
+      }
+
+      return rows;
+    }
+  }, {
+    key: "handleSave",
+    value: function handleSave() {
+      console.log('scheme:', this.state);
+      var hall = this.state.hall;
+      fetch("/places/add/".concat(hall.id), {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(this.state.placeMatrix)
+      }).then(function (resp) {
+        return console.log(resp);
+      } // () => document.location.reload() // Don't know how to rerender the Hall list only :-(
+      );
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      console.log('will unmount');
+      this.setState({
+        hall: null,
+        rows: null,
+        places: null,
+        placeMatrix: []
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      // @TODO: fieldset перекинуть в родительский компонент
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0422\u0435\u043F\u0435\u0440\u044C \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u0442\u044C \u0442\u0438\u043F\u044B \u043A\u0440\u0435\u0441\u0435\u043B \u043D\u0430 \u0441\u0445\u0435\u043C\u0435 \u0437\u0430\u043B\u0430:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__legend"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "conf-step__chair conf-step__chair_standart"
+      }), " \u2014 \u043E\u0431\u044B\u0447\u043D\u044B\u0435 \u043A\u0440\u0435\u0441\u043B\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "conf-step__chair conf-step__chair_vip"
+      }), " \u2014 VIP \u043A\u0440\u0435\u0441\u043B\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "conf-step__chair conf-step__chair_disabled"
+      }), " \u2014 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 (\u043D\u0435\u0442 \u043A\u0440\u0435\u0441\u043B\u0430)", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__hint"
+      }, "\u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u0438\u0434 \u043A\u0440\u0435\u0441\u043B\u0430, \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043F\u043E \u043D\u0435\u043C\u0443 \u043B\u0435\u0432\u043E\u0439 \u043A\u043D\u043E\u043F\u043A\u043E\u0439 \u043C\u044B\u0448\u0438")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__hall"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__hall-wrapper"
+      }, this.buildPlacesScheme())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("fieldset", {
+        className: "conf-step__buttons text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-regular",
+        onClick: this.props.handleCancel
+      }, "\u041E\u0442\u043C\u0435\u043D\u0430"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "submit",
+        value: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C",
+        className: "conf-step__button conf-step__button-accent",
+        onClick: this.handleSave
+      })));
+    }
+  }]);
+
+  return HallScheme;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
 
 /***/ }),
 
