@@ -42,7 +42,7 @@ export default class HallAddPopup extends Component {
                   <div className="popup__header">
                     <h2 className="popup__title">
                       Добавление зала
-                      <a className="popup__dismiss" href="#"><img src="i/close.png" alt="Закрыть" onClick={this.close} /></a>
+                      <a className="popup__dismiss" href="#" onClick={this.close}><img src="i/close.png" alt="Закрыть" /></a>
                     </h2>
 
                   </div>

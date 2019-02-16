@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import HallAddButton from './HallAddButton';
 import HallAddPopup from './HallAddPopup';
 import HallDeletePopup from './HallDeletePopup';
 

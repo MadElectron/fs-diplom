@@ -34,3 +34,7 @@ Route::post('/places/list', 'PlacesController@show')->name('places_list');
 Route::post('/places/delete/{id}', 'PlacesController@destroy')->name('places_delete');
 
 Route::post('/place-type-prices/add/{hallId}', 'PlaceTypePricesController@store')->name('place_type_prices_add');
+
+Route::post('/movies/add', 'MoviesController@store')->name('movies_add');
+Route::post('/movies/list', 'MoviesController@show')->name('movies_list');
+Route::post('/movies/delete/{id}', 'MoviesController@destroy')->name('movies_delete');

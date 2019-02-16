@@ -71,8 +71,6 @@ export default class HallConfigurationBlock extends Component {
     let hallRows = null;
     let hallScheme = null;
 
-    console.log(this.state);
-
     // @TODO: Это работает только если пустой зал
     if (this.state.selectedHall) {
       hallRows = <HallRows 

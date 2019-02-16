@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import HallManagementBlock from './HallManagementBlock';
 import HallConfigurationBlock from './HallConfigurationBlock';
 import HallPriceBlock from './HallPriceBlock';
+import MovieManagementBlock from './MovieManagementBlock';
 
 
 class App extends Component {
@@ -10,7 +11,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      data: null
+      data: null,
+      movieData: null,
     }
   }
 
@@ -25,6 +27,17 @@ class App extends Component {
     );
   }
 
+  getMovieList() {
+    return fetch('/movies/list',{
+      method: "POST",
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+    }).then(
+      resp => resp.json()
+    ); 
+  }
+
   componentDidMount() {
     this.getHallList()
       .then(json => {
@@ -32,6 +45,13 @@ class App extends Component {
           {data : json
         });
       });
+
+    this.getMovieList()
+      .then(json => {
+        this.setState(
+          {movieData : json
+        });
+      });      
   }
 
   render() {
@@ -67,6 +87,18 @@ class App extends Component {
           
         </div>
       </section>
+
+      <section className="conf-step">
+        <header className="conf-step__header conf-step__header_opened">
+          <h2 className="conf-step__title">Сетка сеансов</h2>
+        </header>
+        <div className="conf-step__wrapper">
+          
+          <MovieManagementBlock data={this.state.data} movieData={this.state.movieData} />  
+        </div>
+      </section>            
+
+
     </div>
     );
   }
