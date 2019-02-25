@@ -637,6 +637,16 @@ select {
   width: calc(1440px * 0.5);
 }
 
+.conf-step__seances-timeline-floating-time {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 0;
+  bottom: -2rem;
+  font-size: 1.4rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
 .conf-step__seances-movie {
   position: absolute;
   height: 40px;

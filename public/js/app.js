@@ -60603,6 +60603,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MovieManagementBlock__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MovieManagementBlock */ "./resources/assets/js/components/MovieManagementBlock.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -60639,7 +60655,8 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
       data: null,
-      movieData: null
+      movieData: null,
+      showtimes: null
     };
     return _this;
   }
@@ -60669,6 +60686,49 @@ function (_Component) {
       });
     }
   }, {
+    key: "getShowtimeList",
+    value: function getShowtimeList() {
+      return fetch('/showtimes/list', {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      }).then(function (resp) {
+        return resp.json();
+      });
+    }
+  }, {
+    key: "showtimesToMatrix",
+    value: function showtimesToMatrix(data) {
+      var result = {};
+
+      _toConsumableArray(data).forEach(function (st) {
+        var dt = new Date(st.start_time);
+        var _ref = [dt.getHours(), dt.getMinutes()],
+            h = _ref[0],
+            m = _ref[1];
+
+        var _map = [h, m].map(function (x) {
+          return (x < 10 ? '0' : '') + x;
+        });
+
+        var _map2 = _slicedToArray(_map, 2);
+
+        h = _map2[0];
+        m = _map2[1];
+        (result[st.hall_id] || (result[st.hall_id] = [])).push({
+          id: st.movie.id,
+          title: st.movie.title,
+          duration: st.movie.duration,
+          startTime: "".concat(h, ":").concat(m),
+          style: {},
+          initial: true
+        });
+      });
+
+      return result;
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
@@ -60681,6 +60741,11 @@ function (_Component) {
       this.getMovieList().then(function (json) {
         _this2.setState({
           movieData: json
+        });
+      });
+      this.getShowtimeList().then(function (json) {
+        _this2.setState({
+          showtimes: _this2.showtimesToMatrix(json)
         });
       });
     }
@@ -60729,7 +60794,8 @@ function (_Component) {
         className: "conf-step__wrapper"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieManagementBlock__WEBPACK_IMPORTED_MODULE_5__["default"], {
         data: this.state.data,
-        movieData: this.state.movieData
+        movieData: this.state.movieData,
+        showtimes: this.state.showtimes
       }))));
     }
   }]);
@@ -62431,6 +62497,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MovieDeletePopup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MovieDeletePopup */ "./resources/assets/js/components/MovieDeletePopup.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -62451,6 +62525,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+var TIMELINE_STEP = 5;
 
 var MovieMangementBlock =
 /*#__PURE__*/
@@ -62468,12 +62543,15 @@ function (_Component) {
       deletePopupOn: false,
       data: null,
       deleteId: null,
-      movieMatrix: {}
+      showtimes: {}
     };
     _this.handleCreateClick = _this.handleCreateClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDeleteClick = _this.handleDeleteClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDragOver = _this.handleDragOver.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleDragStart = _this.handleDragStart.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.save = _this.save.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.cancel = _this.cancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -62495,7 +62573,6 @@ function (_Component) {
   }, {
     key: "handleDragStart",
     value: function handleDragStart(e) {
-      console.log(e.target);
       var data = {
         id: e.target.dataset.id,
         title: e.target.dataset.title,
@@ -62508,6 +62585,27 @@ function (_Component) {
     key: "handleDragOver",
     value: function handleDragOver(e) {
       e.preventDefault();
+      var floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
+
+      if (e.target.classList.contains('conf-step__seances-timeline')) {
+        // Duplicating handleDrop code cause zero access to e.dataTransfer
+        var pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
+        var width = parseInt(getComputedStyle(e.target).width);
+        var time = this.intToTimeString(pos / width * 24 * 60);
+
+        if (!floatingTime) {
+          floatingTime = document.createElement('p');
+          floatingTime.classList.add('conf-step__seances-timeline-floating-time');
+          e.target.appendChild(floatingTime);
+        }
+
+        floatingTime.style.left = pos + 'px';
+        floatingTime.textContent = time;
+      } else {
+        if (floatingTime) {
+          floatingTime.remove();
+        }
+      }
     }
   }, {
     key: "handleDrop",
@@ -62516,6 +62614,8 @@ function (_Component) {
 
       if (e.target.classList.contains('conf-step__seances-timeline')) {
         var data = JSON.parse(e.dataTransfer.getData("text"));
+        var floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
+        floatingTime.remove();
         data.parentWidth = parseInt(getComputedStyle(e.target).width);
         data.hallId = e.target.dataset.id;
         data.pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
@@ -62525,10 +62625,48 @@ function (_Component) {
   }, {
     key: "intToTimeString",
     value: function intToTimeString(i) {
+      // Helper 
       var _ref = [parseInt(Math.floor(i / 60)), parseInt(i % 24)],
           h = _ref[0],
           m = _ref[1];
-      return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+      m = Math.floor(m / TIMELINE_STEP) * TIMELINE_STEP;
+
+      var _map = [h, m].map(function (x) {
+        return (x < 10 ? '0' : '') + x;
+      });
+
+      var _map2 = _slicedToArray(_map, 2);
+
+      h = _map2[0];
+      m = _map2[1];
+      return "".concat(h, ":").concat(m);
+    }
+  }, {
+    key: "timeToInt",
+    value: function timeToInt(t) {
+      var _t$split$map = t.split(':').map(function (x) {
+        return parseInt(x);
+      }),
+          _t$split$map2 = _slicedToArray(_t$split$map, 2),
+          h = _t$split$map2[0],
+          m = _t$split$map2[1];
+
+      return h * 60 + m;
+    }
+  }, {
+    key: "filterInitialShowtimes",
+    value: function filterInitialShowtimes(initial) {
+      var showtimes = Object.assign({}, this.state.showtimes);
+      Object.entries(showtimes).forEach(function (hall) {
+        var _hall = _slicedToArray(hall, 2),
+            id = _hall[0],
+            h = _hall[1];
+
+        showtimes[id] = h.filter(function (st) {
+          return st.initial !== initial;
+        });
+      });
+      return showtimes;
     }
   }, {
     key: "addShowtime",
@@ -62540,18 +62678,18 @@ function (_Component) {
         color: data.color,
         left: data.pos
       };
-      var showTimes = this.state.movieMatrix;
+      var showTimes = this.state.showtimes;
       (showTimes[data.hallId] || (showTimes[data.hallId] = [])).push({
         id: data.id,
         title: data.title,
         duration: data.duration,
         startTime: time,
-        style: style
+        style: style,
+        initial: false
       });
       this.setState({
-        movieMatrix: showTimes
+        showtimes: showTimes
       });
-      console.log(this.state.movieMatrix);
       this.forceUpdate();
     }
   }, {
@@ -62567,8 +62705,8 @@ function (_Component) {
       this.props.data.forEach(function (el, index) {
         var hallShowtimes = [];
 
-        if (_this2.state.movieMatrix && _this2.state.movieMatrix.hasOwnProperty(el.id)) {
-          _this2.state.movieMatrix[el.id].forEach(function (el, index) {
+        if (_this2.state.showtimes && _this2.state.showtimes.hasOwnProperty(el.id)) {
+          _this2.state.showtimes[el.id].forEach(function (el, index) {
             return hallShowtimes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
               key: index,
               className: "conf-step__seances-movie",
@@ -62617,7 +62755,7 @@ function (_Component) {
           onDoubleClick: function onDoubleClick(e) {
             return _this3.handleDeleteClick(el, e);
           },
-          "data-id": 'movie_' + el.id,
+          "data-id": el.id,
           "data-title": el.title,
           "data-duration": el.duration,
           draggable: true
@@ -62634,6 +62772,31 @@ function (_Component) {
       return result;
     }
   }, {
+    key: "cancel",
+    value: function cancel() {
+      this.setState({
+        showtimes: this.filterInitialShowtimes(false)
+      });
+      this.forceUpdate();
+    }
+  }, {
+    key: "save",
+    value: function save() {
+      var showtimes = this.filterInitialShowtimes(true);
+      Object.values(this.state.showtimes).forEach(function (hall) {
+        hall.forEach(function (st) {
+          st.initial = true;
+        });
+      });
+      fetch("/showtimes/add", {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(showtimes)
+      }).then(this.forceUpdate());
+    }
+  }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
       if (document.getElementById('popups_movies')) {
@@ -62644,6 +62807,29 @@ function (_Component) {
           deletedMovie: this.state.deletedHall
         })), document.getElementById('popups_movies'));
       }
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(props) {
+      var _this4 = this;
+
+      var showtimes = props.showtimes;
+
+      if (showtimes) {
+        Object.values(showtimes).forEach(function (hall) {
+          return hall.forEach(function (st) {
+            st.style = {
+              width: 770 * st.duration / 24 / 60,
+              left: 770 * _this4.timeToInt(st.startTime) / 24 / 60,
+              color: 'white'
+            };
+          });
+        });
+      }
+
+      this.setState({
+        showtimes: showtimes
+      });
     }
   }, {
     key: "render",
@@ -62660,11 +62846,13 @@ function (_Component) {
       }, this.buildHallList()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("fieldset", {
         className: "conf-step__buttons text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "conf-step__button conf-step__button-regular"
+        className: "conf-step__button conf-step__button-regular",
+        onClick: this.cancel
       }, "\u041E\u0442\u043C\u0435\u043D\u0430"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "submit",
         value: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C",
-        className: "conf-step__button conf-step__button-accent"
+        className: "conf-step__button conf-step__button-accent",
+        onClick: this.save
       })));
     }
   }]);

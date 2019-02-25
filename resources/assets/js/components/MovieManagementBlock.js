@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import MovieAddPopup from './MovieAddPopup';
 import MovieDeletePopup from './MovieDeletePopup';
 
+const TIMELINE_STEP = 5;
+
 export default class MovieMangementBlock extends Component {
 
     constructor(props) {
@@ -13,13 +15,16 @@ export default class MovieMangementBlock extends Component {
         deletePopupOn: false,
         data: null,
         deleteId: null,
-        movieMatrix: {}
+        showtimes: {}
       };
 
       this.handleCreateClick = this.handleCreateClick.bind(this);
       this.handleDeleteClick = this.handleDeleteClick.bind(this);
       this.handleDragOver = this.handleDragOver.bind(this);
+      this.handleDragStart = this.handleDragStart.bind(this);
       this.handleDrop = this.handleDrop.bind(this);
+      this.save = this.save.bind(this);
+      this.cancel = this.cancel.bind(this);
     }
 
     handleCreateClick() {
@@ -36,8 +41,6 @@ export default class MovieMangementBlock extends Component {
     }
 
     handleDragStart(e) {
-      console.log(e.target);
-
       const data = {
         id: e.target.dataset.id,
         title: e.target.dataset.title,
@@ -50,6 +53,29 @@ export default class MovieMangementBlock extends Component {
 
     handleDragOver(e) {
       e.preventDefault();
+
+      let floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
+
+      if (e.target.classList.contains('conf-step__seances-timeline')){
+        // Duplicating handleDrop code cause zero access to e.dataTransfer
+
+        let pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
+        let width = parseInt(getComputedStyle(e.target).width);
+        let time = this.intToTimeString(pos / width * 24 * 60);
+
+        if (!floatingTime) {
+          floatingTime = document.createElement('p');  
+          floatingTime.classList.add('conf-step__seances-timeline-floating-time');
+          e.target.appendChild(floatingTime);
+        } 
+
+        floatingTime.style.left = pos + 'px';
+        floatingTime.textContent = time;        
+      } else {
+        if (floatingTime) {  
+          floatingTime.remove();
+        }
+      }
     }
 
     handleDrop(e) {
@@ -57,6 +83,9 @@ export default class MovieMangementBlock extends Component {
 
       if (e.target.classList.contains('conf-step__seances-timeline')){
         const data = JSON.parse(e.dataTransfer.getData("text"));
+
+        let floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
+        floatingTime.remove();
   
         data.parentWidth = parseInt(getComputedStyle(e.target).width);
         data.hallId = e.target.dataset.id;
@@ -67,9 +96,31 @@ export default class MovieMangementBlock extends Component {
     }
 
     intToTimeString(i) {
-      let [h, m] = [parseInt(Math.floor(i/60)), parseInt(i % 24)];
+      // Helper 
 
-      return (h<10 ? '0' : '') + h + ':' + (m<10 ? '0' : '') + m;
+      let [h, m] = [parseInt(Math.floor(i/60)), parseInt(i % 24)];
+      m = Math.floor(m / TIMELINE_STEP) * TIMELINE_STEP;
+
+      [h, m] = [h, m].map(x => (x < 10 ? '0' : '') + x);
+
+      return `${h}:${m}`;
+    }
+
+    timeToInt(t) {
+      let [h, m] = t.split(':').map(x => parseInt(x));
+
+      return h*60 + m;
+    }
+
+    filterInitialShowtimes(initial) {
+      let showtimes = Object.assign({}, this.state.showtimes);
+
+      Object.entries(showtimes).forEach(hall => {
+        let [id, h] = hall;
+        showtimes[id] = h.filter(st => st.initial !== initial);
+      });
+
+      return showtimes;
     }
 
     addShowtime(data) {
@@ -82,25 +133,24 @@ export default class MovieMangementBlock extends Component {
         left: data.pos
       };
 
-      let showTimes = this.state.movieMatrix;
+      let showTimes = this.state.showtimes;
 
       (showTimes[data.hallId] || (showTimes[data.hallId] = [])).push({
         id: data.id,
         title: data.title,
         duration: data.duration,
         startTime: time,
-        style: style
+        style: style,
+        initial: false,
       });
 
 
       this.setState({
-        movieMatrix: showTimes
+        showtimes: showTimes
       });
 
-      console.log(this.state.movieMatrix);
       this.forceUpdate();
     }
-
 
     buildHallList() {
       if (!this.props.data) {
@@ -112,8 +162,8 @@ export default class MovieMangementBlock extends Component {
       this.props.data.forEach((el, index) => {
         const hallShowtimes = [];
 
-        if (this.state.movieMatrix && this.state.movieMatrix.hasOwnProperty(el.id)) {
-          this.state.movieMatrix[el.id].forEach((el, index) => hallShowtimes.push(
+        if (this.state.showtimes && this.state.showtimes.hasOwnProperty(el.id)) {
+          this.state.showtimes[el.id].forEach((el, index) => hallShowtimes.push(
             <div key={index} className="conf-step__seances-movie" style={{
               width: el.style.width, 
               left: el.style.left,
@@ -139,6 +189,7 @@ export default class MovieMangementBlock extends Component {
     }    
 
     buildMovieList() {
+
       if (!this.props.movieData) {
         return null;
       }
@@ -150,7 +201,7 @@ export default class MovieMangementBlock extends Component {
           className="conf-step__movie" 
           onDragStart={this.handleDragStart}
           onDoubleClick={e => this.handleDeleteClick(el, e)} 
-          data-id={'movie_' + el.id}
+          data-id={el.id}
           data-title={el.title}
           data-duration={el.duration}
           draggable >
@@ -158,10 +209,37 @@ export default class MovieMangementBlock extends Component {
           <h3 className="conf-step__movie-title">{el.title}</h3>
           <p className="conf-step__movie-duration">{el.duration} минут</p>
         </div>
+
       ));
 
       return result;
     } 
+
+    cancel() {
+      this.setState({
+        showtimes: this.filterInitialShowtimes(false)
+      });
+
+      this.forceUpdate();
+    }
+
+    save() {
+      let showtimes = this.filterInitialShowtimes(true);
+
+      Object.values(this.state.showtimes).forEach(hall => {
+        hall.forEach(st => {st.initial = true});
+      });
+
+      fetch(`/showtimes/add`,{
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify(showtimes)
+      }).then(
+        this.forceUpdate()
+      );
+    }
     
     componentDidUpdate() {
         if (document.getElementById('popups_movies')) {
@@ -173,6 +251,27 @@ export default class MovieMangementBlock extends Component {
             </div>
             , document.getElementById('popups_movies'));
         }
+    }
+
+    componentWillReceiveProps(props) {
+      let showtimes = props.showtimes;
+
+      if (showtimes) {
+        Object.values(showtimes).forEach(hall => hall.forEach(st => {
+
+          st.style = {
+            width : 770 * st.duration / 24 / 60,
+            left : 770 * this.timeToInt(st.startTime) / 24 / 60,
+            color : 'white'
+          };
+
+        }));
+      }
+
+      this.setState({
+        showtimes: showtimes
+      });
+
     }
 
     render() {
@@ -190,8 +289,8 @@ export default class MovieMangementBlock extends Component {
           </div>
           
           <fieldset className="conf-step__buttons text-center">
-            <button className="conf-step__button conf-step__button-regular">Отмена</button>
-            <input type="submit" value="Сохранить" className="conf-step__button conf-step__button-accent" />
+            <button className="conf-step__button conf-step__button-regular" onClick={this.cancel}>Отмена</button>
+            <input type="submit" value="Сохранить" className="conf-step__button conf-step__button-accent" onClick={this.save} />
           </fieldset>    
         </div> 
       );

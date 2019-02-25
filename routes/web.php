@@ -38,3 +38,7 @@ Route::post('/place-type-prices/add/{hallId}', 'PlaceTypePricesController@store'
 Route::post('/movies/add', 'MoviesController@store')->name('movies_add');
 Route::post('/movies/list', 'MoviesController@show')->name('movies_list');
 Route::post('/movies/delete/{id}', 'MoviesController@destroy')->name('movies_delete');
+
+Route::post('/showtimes/add', 'ShowtimesController@store')->name('showtimes_add');
+Route::post('/showtimes/list', 'ShowtimesController@show')->name('showtimes_list');
+Route::post('/showtimes/delete/{id}', 'ShowtimesController@destroy')->name('showtimes_delete');

@@ -13,6 +13,7 @@ class App extends Component {
     this.state = {
       data: null,
       movieData: null,
+      showtimes: null,
     }
   }
 
@@ -38,6 +39,40 @@ class App extends Component {
     ); 
   }
 
+
+  getShowtimeList() {
+    return fetch('/showtimes/list',{
+      method: "POST",
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+    }).then(
+      resp => resp.json()
+    ); 
+  }
+
+  showtimesToMatrix(data) {
+    let result = {};
+
+    [...data].forEach(st => {
+      let dt = new Date(st.start_time);
+      let [h, m] = [dt.getHours(), dt.getMinutes()];
+      
+      [h, m] = [h, m].map(x => (x < 10 ? '0' : '') + x);
+
+      (result[st.hall_id] || (result[st.hall_id] = [])).push({
+        id: st.movie.id,
+        title: st.movie.title,
+        duration: st.movie.duration,
+        startTime: `${h}:${m}`,
+        style: {},
+        initial: true
+      });
+    });
+
+    return result;
+  }
+
   componentDidMount() {
     this.getHallList()
       .then(json => {
@@ -52,6 +87,14 @@ class App extends Component {
           {movieData : json
         });
       });      
+
+    this.getShowtimeList()
+      .then(json => {
+
+        this.setState(
+          {showtimes : this.showtimesToMatrix(json)
+        });
+      }); 
   }
 
   render() {
@@ -94,7 +137,7 @@ class App extends Component {
         </header>
         <div className="conf-step__wrapper">
           
-          <MovieManagementBlock data={this.state.data} movieData={this.state.movieData} />  
+          <MovieManagementBlock data={this.state.data} movieData={this.state.movieData} showtimes={this.state.showtimes} />  
         </div>
       </section>            
 

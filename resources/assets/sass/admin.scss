@@ -556,7 +556,9 @@ input[type='radio'], input[type='submit'], button, .conf-step__header, select {
       &:nth-of-type(#{$i}) {
         background-color:adjust-hue($startyellow, $i * $degrees);
       }
-    }    
+    }
+
+  
     
   }
   
@@ -596,6 +598,18 @@ input[type='radio'], input[type='submit'], button, .conf-step__header, select {
   height: 40px;
   box-sizing: content-box;
   width: calc(1440px * 0.5); //1440 минут в сутках. 1 минута = 0,5 пикселя. Блок фильма длиной 120 минут будет 60 пикселей по ширине.
+
+
+  &-floating-time {
+    content: '';
+    position: absolute;
+    display: block;
+    left: 0;
+    bottom: -2rem;
+    font-size: 1.4rem;
+    color: rgba(0, 0, 0, 0.7);
+  }  
+
 }
 
 .conf-step__seances-movie {
