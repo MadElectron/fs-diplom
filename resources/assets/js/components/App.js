@@ -74,6 +74,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    console.log('App mounted');
+
     this.getHallList()
       .then(json => {
         this.setState(

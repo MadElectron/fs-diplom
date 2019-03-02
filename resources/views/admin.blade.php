@@ -25,12 +25,6 @@
   
   <main class="conf-steps">
     <div id="app"></div>
-
-    
-
-    
-
-    
     <section class="conf-step">
       <header class="conf-step__header conf-step__header_opened">
         <h2 class="conf-step__title">Открыть продажи</h2>

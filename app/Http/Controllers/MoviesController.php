@@ -51,7 +51,9 @@ class MoviesController extends Controller
      */
     public function show()
     {
-        $result = Movie::all();
+        $result = Movie::with(['showtimes' => function($st){
+            $st->orderBy('hall_id', 'ASC')->orderBy('start_time', 'ASC');
+        }, 'showtimes.hall'])->get();
 
         return response($result->toJson())
             ->header('Content-Type', 'application/json');

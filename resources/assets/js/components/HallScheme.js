@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-const TYPES = ['disables', 'standart', 'vip'];
+const TYPES = ['disabled', 'standart', 'vip'];
 
 function matrix(rows, cols, value) {
   return new Array(parseInt(rows)).fill(new Array(parseInt(cols)).fill(value));

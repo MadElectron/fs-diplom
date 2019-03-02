@@ -41,4 +41,5 @@ Route::post('/movies/delete/{id}', 'MoviesController@destroy')->name('movies_del
 
 Route::post('/showtimes/add', 'ShowtimesController@store')->name('showtimes_add');
 Route::post('/showtimes/list', 'ShowtimesController@show')->name('showtimes_list');
+Route::post('/showtimes/{id}', 'ShowtimesController@show')->name('showtimes_list');
 Route::post('/showtimes/delete/{id}', 'ShowtimesController@destroy')->name('showtimes_delete');

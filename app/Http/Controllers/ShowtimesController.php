@@ -59,13 +59,14 @@ class ShowtimesController extends Controller
     public function show($id = null)
     {
         if ($id) {
-            $result = Showtime::with('hall', 'movie')->where('id','=', $id);
+            $result = Showtime::with('hall.prices', 'hall.places', 'movie')->where('id','=', $id)->get()->first();
         } else {
-            $result = Showtime::with('hall', 'movie')->get();
+            $result = Showtime::with('hall', 'movie')->orderBy('start_time')->get();
         }
 
-        return response($result->toJson())
+        return response($result)
             ->header('Content-Type', 'application/json');
+
     }
 
     /**
