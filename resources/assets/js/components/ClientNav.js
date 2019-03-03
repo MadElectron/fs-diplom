@@ -19,9 +19,6 @@ export default class ClientNav extends Component {
       let date = new Date();
 
       for(let i = 0; i<7; i++) {
-
-        // console.log(date.toLocaleDateString('en-US'), this.props.date.toLocaleDateString('en-US'))
-
         let number = date.getDate();
         let day = date.toLocaleString('ru-RU', {weekday: 'short'});
         let dayNum = date.getDay();

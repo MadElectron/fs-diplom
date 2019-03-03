@@ -13,5 +13,10 @@ class Place extends Model
     public function hall() 
     {
       return $this->belongsTo('App\Hall');
-    }    
+    }   
+
+    // public function ticket() 
+    // {
+    //   return $this->belongsTo('App\Ticket');
+    // }        
 }

@@ -9,12 +9,6 @@ export default class ClientTicket extends Component {
       places: this.props.places,
       showtime: this.props.showtime,
     }
-
-    this.stringifyPlaces = this.stringifyPlaces.bind(this);
-  }
-
-  stringifyPlaces() {
-    return Object.values(this.state.places).map(p => `Ряд ${p.row}, место ${p.number}`).join('; ');
   }
 
   render() {
@@ -28,9 +22,9 @@ export default class ClientTicket extends Component {
           
           <div className="ticket__info-wrapper">
             <p className="ticket__info">На фильм: <span className="ticket__details ticket__title">{this.state.showtime.movie.title}</span></p>
-            <p className="ticket__info">Места: <span className="ticket__details ticket__chairs"><br/>{this.stringifyPlaces()}</span></p>
+            <p className="ticket__info">Места: <span className="ticket__details ticket__chairs"><br/>{this.props.stringifyPlaces()}</span></p>
             <p className="ticket__info">В зале: <span className="ticket__details ticket__hall">{this.state.showtime.hall.title}</span></p>
-            <p className="ticket__info">Начало сеанса: <span className="ticket__details ticket__start">{(new Date(this.state.showtime.start_time)).toLocaleTimeString({hour: '2-digit', 'seconds': false})}</span></p>
+            <p className="ticket__info">Начало сеанса: <span className="ticket__details ticket__start">{ (new Date(this.state.showtime.start_time)).toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})}</span></p>
 
             <img className="ticket__info-qr" src="i/qr-code.png" />
 

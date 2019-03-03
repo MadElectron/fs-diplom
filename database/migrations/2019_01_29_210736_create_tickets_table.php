@@ -15,11 +15,10 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('place_id')->unsigned();
             $table->integer('showtime_id')->unsigned();
             $table->string('qr_code');
             $table->integer('price');
-            $table->foreign('place_id')->references('id')->on('places');
+            $table->datetime('date');
             $table->foreign('showtime_id')->references('id')->on('showtimes');
         });
     }
@@ -32,7 +31,6 @@ class CreateTicketsTable extends Migration
     public function down()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->dropForeign(['place_id']);
             $table->dropForeign(['showtime_id']);
         });
 

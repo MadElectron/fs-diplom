@@ -60865,11 +60865,11 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Client).call(this, props));
     _this.state = {
       date: new Date(),
+      disabled: true,
       movieData: null,
       hall: null,
       showtime: null,
       places: {},
-      disabled: true,
       step: 0
     };
     _this.handleAccept = _this.handleAccept.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -60877,6 +60877,8 @@ function (_Component) {
     _this.handleShowtimeChoose = _this.handleShowtimeChoose.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handlePlaceToggle = _this.handlePlaceToggle.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handlePayment = _this.handlePayment.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.countPrice = _this.countPrice.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.stringifyPlaces = _this.stringifyPlaces.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -60905,6 +60907,42 @@ function (_Component) {
       });
     }
   }, {
+    key: "getTickets",
+    value: function getTickets() {
+      return fetch('/tickets/list', {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      }).then(function (resp) {
+        return resp.json();
+      });
+    }
+  }, {
+    key: "setTakenPlaces",
+    value: function setTakenPlaces(showtime, tickets) {
+      var _this2 = this;
+
+      var places = showtime.hall.places;
+      tickets = tickets.filter(function (ticket) {
+        return new Date(ticket.date).toLocaleDateString() === _this2.state.date.toLocaleDateString() && ticket.showtime_id === showtime.id;
+      });
+      var ticketPlaces = [].concat.apply([], tickets.map(function (ticket) {
+        return ticket.places.map(function (place) {
+          return place.place_id;
+        });
+      }));
+      places.forEach(function (place) {
+        if (ticketPlaces.find(function (ticketPlace) {
+          return ticketPlace === place.id;
+        })) {
+          place.type = 3;
+        }
+      });
+      showtime.hall.places = places;
+      return showtime;
+    }
+  }, {
     key: "handleDateChange",
     value: function handleDateChange(e) {
       e.preventDefault();
@@ -60916,13 +60954,15 @@ function (_Component) {
   }, {
     key: "handleShowtimeChoose",
     value: function handleShowtimeChoose(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       e.preventDefault();
       this.getShowtime(e.target.dataset.id).then(function (json) {
-        return _this2.setState({
-          step: 1,
-          showtime: json
+        return _this3.getTickets().then(function (tickets) {
+          return _this3.setState({
+            step: 1,
+            showtime: _this3.setTakenPlaces(json, tickets)
+          });
         });
       });
     }
@@ -60966,19 +61006,36 @@ function (_Component) {
   }, {
     key: "handlePayment",
     value: function handlePayment() {
-      this.setState({
-        step: 3
+      var _this4 = this;
+
+      var places = Object.keys(this.state.places);
+      var ticket = {
+        showtime: this.state.showtime.id,
+        date: this.state.date,
+        price: this.countPrice(),
+        places: places
+      };
+      fetch('/tickets/add', {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(ticket)
+      }).then(function () {
+        _this4.setState({
+          step: 3
+        });
       });
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this3 = this;
+      var _this5 = this;
 
       console.log('Client mounted');
       this.getMovieList().then(function (json) {
-        _this3.setState({
-          movieData: _this3.convertShowtimesToHalls(json)
+        _this5.setState({
+          movieData: _this5.convertShowtimesToHalls(json)
         });
       });
     }
@@ -60992,6 +61049,20 @@ function (_Component) {
         });
       });
       return data;
+    }
+  }, {
+    key: "countPrice",
+    value: function countPrice() {
+      return Object.values(this.state.places).reduce(function (total, p) {
+        return total + parseInt(p.price);
+      }, 0);
+    }
+  }, {
+    key: "stringifyPlaces",
+    value: function stringifyPlaces() {
+      return Object.values(this.state.places).map(function (p) {
+        return "\u0420\u044F\u0434 ".concat(p.row, ", \u043C\u0435\u0441\u0442\u043E ").concat(p.number);
+      }).join('; ');
     }
   }, {
     key: "render",
@@ -61008,6 +61079,7 @@ function (_Component) {
 
         case 1:
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClientHall__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            date: this.state.date,
             showtime: this.state.showtime,
             disabled: this.state.disabled,
             handleAccept: this.handleAccept,
@@ -61019,13 +61091,16 @@ function (_Component) {
             hall: this.state.hall,
             showtime: this.state.showtime,
             places: this.state.places,
-            handlePayment: this.handlePayment
+            handlePayment: this.handlePayment,
+            countPrice: this.countPrice,
+            stringifyPlaces: this.stringifyPlaces
           });
 
         case 3:
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClientTicket__WEBPACK_IMPORTED_MODULE_6__["default"], {
             showtime: this.state.showtime,
-            places: this.state.places
+            places: this.state.places,
+            stringifyPlaces: this.stringifyPlaces
           });
 
         default:
@@ -61077,7 +61152,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var TYPES = ['disabled', 'standart', 'vip'];
+var TYPES = ['disabled', 'standart', 'vip', 'taken'];
 
 var ClientHall =
 /*#__PURE__*/
@@ -61091,6 +61166,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ClientHall).call(this, props));
     _this.state = {
+      date: _this.props.date,
       showtime: _this.props.showtime,
       prices: _this.getPrices()
     };
@@ -61144,6 +61220,14 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var date = this.state.date.toLocaleString('ru-RU', {
+        day: 'numeric',
+        month: 'long'
+      });
+      var time = new Date(this.state.showtime.start_time).toLocaleTimeString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
         className: "buying"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -61154,7 +61238,7 @@ function (_Component) {
         className: "buying__info-title"
       }, this.state.showtime.movie.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "buying__info-start"
-      }, "\u041D\u0430\u0447\u0430\u043B\u043E \u0441\u0435\u0430\u043D\u0441\u0430: ", this.state.showtime.start_time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      }, "\u041D\u0430\u0447\u0430\u043B\u043E \u0441\u0435\u0430\u043D\u0441\u0430: ", date, ", ", time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "buying__info-hall"
       }, this.state.showtime.hall.title)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "buying__info-hint"
@@ -61264,7 +61348,6 @@ function (_Component) {
       var date = new Date();
 
       for (var i = 0; i < 7; i++) {
-        // console.log(date.toLocaleDateString('en-US'), this.props.date.toLocaleDateString('en-US'))
         var number = date.getDate();
         var day = date.toLocaleString('ru-RU', {
           weekday: 'short'
@@ -61331,13 +61414,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
 
@@ -61357,25 +61440,10 @@ function (_Component) {
       places: _this.props.places,
       showtime: _this.props.showtime
     };
-    _this.countPrice = _this.countPrice.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
   _createClass(ClientPayment, [{
-    key: "countPrice",
-    value: function countPrice() {
-      return Object.values(this.state.places).reduce(function (total, p) {
-        return total + parseInt(p.price);
-      }, 0);
-    }
-  }, {
-    key: "stringifyPlaces",
-    value: function stringifyPlaces() {
-      return Object.values(this.state.places).map(function (p) {
-        return "\u0420\u044F\u0434 ".concat(p.row, ", \u043C\u0435\u0441\u0442\u043E ").concat(p.number);
-      }).join('; ');
-    }
-  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
@@ -61394,7 +61462,7 @@ function (_Component) {
         className: "ticket__info"
       }, "\u041C\u0435\u0441\u0442\u0430: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "ticket__details ticket__chairs"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.stringifyPlaces())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.props.stringifyPlaces())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "ticket__info"
       }, "\u0412 \u0437\u0430\u043B\u0435: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "ticket__details ticket__hall"
@@ -61402,14 +61470,14 @@ function (_Component) {
         className: "ticket__info"
       }, "\u041D\u0430\u0447\u0430\u043B\u043E \u0441\u0435\u0430\u043D\u0441\u0430: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "ticket__details ticket__start"
-      }, new Date(this.state.showtime.start_time).toLocaleTimeString({
+      }, new Date(this.state.showtime.start_time).toLocaleTimeString('ru-RU', {
         hour: '2-digit',
-        'seconds': false
+        minute: '2-digit'
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "ticket__info"
       }, "\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "ticket__details ticket__cost"
-      }, this.countPrice()), " \u0440\u0443\u0431\u043B\u0435\u0439"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, this.props.countPrice()), " \u0440\u0443\u0431\u043B\u0435\u0439"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "acceptin-button",
         onClick: this.props.handlePayment
       }, "\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u043E\u0434 \u0431\u0440\u043E\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
@@ -61608,13 +61676,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
 
@@ -61634,18 +61702,10 @@ function (_Component) {
       places: _this.props.places,
       showtime: _this.props.showtime
     };
-    _this.stringifyPlaces = _this.stringifyPlaces.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
   _createClass(ClientTicket, [{
-    key: "stringifyPlaces",
-    value: function stringifyPlaces() {
-      return Object.values(this.state.places).map(function (p) {
-        return "\u0420\u044F\u0434 ".concat(p.row, ", \u043C\u0435\u0441\u0442\u043E ").concat(p.number);
-      }).join('; ');
-    }
-  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
@@ -61664,7 +61724,7 @@ function (_Component) {
         className: "ticket__info"
       }, "\u041C\u0435\u0441\u0442\u0430: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "ticket__details ticket__chairs"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.stringifyPlaces())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.props.stringifyPlaces())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "ticket__info"
       }, "\u0412 \u0437\u0430\u043B\u0435: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "ticket__details ticket__hall"
@@ -61672,9 +61732,9 @@ function (_Component) {
         className: "ticket__info"
       }, "\u041D\u0430\u0447\u0430\u043B\u043E \u0441\u0435\u0430\u043D\u0441\u0430: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "ticket__details ticket__start"
-      }, new Date(this.state.showtime.start_time).toLocaleTimeString({
+      }, new Date(this.state.showtime.start_time).toLocaleTimeString('ru-RU', {
         hour: '2-digit',
-        'seconds': false
+        minute: '2-digit'
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         className: "ticket__info-qr",
         src: "i/qr-code.png"

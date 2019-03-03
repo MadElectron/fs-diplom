@@ -15,7 +15,6 @@ Route::get('/', function () {
     return view('index');
 });
 
-
 Route::get('/login', function () {
     return view('login');
 });
@@ -41,5 +40,10 @@ Route::post('/movies/delete/{id}', 'MoviesController@destroy')->name('movies_del
 
 Route::post('/showtimes/add', 'ShowtimesController@store')->name('showtimes_add');
 Route::post('/showtimes/list', 'ShowtimesController@show')->name('showtimes_list');
-Route::post('/showtimes/{id}', 'ShowtimesController@show')->name('showtimes_list');
+Route::post('/showtimes/{id}', 'ShowtimesController@show')->name('showtime');
 Route::post('/showtimes/delete/{id}', 'ShowtimesController@destroy')->name('showtimes_delete');
+
+Route::post('/tickets/add', 'TicketsController@store')->name('tickets_add');
+Route::post('/tickets/list', 'TicketsController@show')->name('tickets_list');
+Route::post('/tickets/{id}', 'TicketsController@show')->name('ticket');
+

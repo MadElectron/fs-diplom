@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-const TYPES = ['disabled', 'standart', 'vip'];
+const TYPES = ['disabled', 'standart', 'vip', 'taken'];
 
 export default class ClientHall extends Component {
 
@@ -9,6 +9,7 @@ export default class ClientHall extends Component {
     super(props);
 
     this.state = {
+        date: this.props.date,
         showtime: this.props.showtime,
         prices: this.getPrices()
     }
@@ -26,7 +27,6 @@ export default class ClientHall extends Component {
 
   buildScheme() {
     let places = this.state.showtime.hall.places;
-
     let rows = [];
     let result = [];
 
@@ -67,13 +67,16 @@ export default class ClientHall extends Component {
   }
 
   render() {
+    const date = this.state.date.toLocaleString('ru-RU', {day: 'numeric', month: 'long'});
+    const time = (new Date(this.state.showtime.start_time)).toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+
     return (
       <main>
           <section className="buying">
             <div className="buying__info">
               <div className="buying__info-description">
                 <h2 className="buying__info-title">{this.state.showtime.movie.title}</h2>
-                <p className="buying__info-start">Начало сеанса: {this.state.showtime.start_time}</p>
+                <p className="buying__info-start">Начало сеанса: {date}, {time}</p>
                 <p className="buying__info-hall">{this.state.showtime.hall.title}</p>          
               </div>
               <div className="buying__info-hint">

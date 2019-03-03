@@ -13,11 +13,11 @@ class Client extends Component {
 
     this.state = {
       date: new Date(),
+      disabled: true,
       movieData: null,
       hall: null,
       showtime: null,
       places: {},
-      disabled: true,
       step: 0,
 
     }
@@ -27,6 +27,8 @@ class Client extends Component {
     this.handleShowtimeChoose = this.handleShowtimeChoose.bind(this);
     this.handlePlaceToggle = this.handlePlaceToggle.bind(this);
     this.handlePayment = this.handlePayment.bind(this);
+    this.countPrice = this.countPrice.bind(this);
+    this.stringifyPlaces = this.stringifyPlaces.bind(this);
   }
 
   getMovieList() {
@@ -51,13 +53,45 @@ class Client extends Component {
     ); 
   }
 
+  getTickets() {
+    return fetch('/tickets/list',{
+      method: "POST",
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+    }).then(
+      resp => resp.json()
+    );
+  }
+
+  setTakenPlaces(showtime, tickets) {
+
+        let places = showtime.hall.places;
+
+        tickets = tickets.filter(ticket => 
+          (new Date(ticket.date)).toLocaleDateString() === this.state.date.toLocaleDateString()
+            && ticket.showtime_id === showtime.id
+          );
+
+        let ticketPlaces = [].concat.apply([], tickets.map(ticket => ticket.places.map(place => place.place_id)));
+
+        places.forEach(place => {
+          if (ticketPlaces.find(ticketPlace => ticketPlace === place.id)) {
+            place.type = 3;
+          }
+        });
+
+        showtime.hall.places = places;
+
+        return showtime;
+  }
+
 
   handleDateChange(e) {
     e.preventDefault();
       this.setState({
         date: new Date(e.currentTarget.dataset.date)
     });
-
       this.forceUpdate();
   }
 
@@ -65,11 +99,13 @@ class Client extends Component {
     e.preventDefault();
 
     this.getShowtime(e.target.dataset.id)
-      .then(json => 
-        this.setState({
-          step: 1,
-          showtime: json
-        })
+      .then(json => this.getTickets()
+        .then(
+          tickets => this.setState({
+            step: 1,
+            showtime: this.setTakenPlaces(json, tickets)
+          })
+        )
       );
   }
 
@@ -114,9 +150,26 @@ class Client extends Component {
   }
 
   handlePayment() {
-    this.setState({
-      step: 3,
-    });
+    let places = Object.keys(this.state.places);
+    let ticket = {
+      showtime: this.state.showtime.id,
+      date: this.state.date,
+      price: this.countPrice(),
+      places: places
+    };
+
+    fetch('/tickets/add',{
+      method: "POST",
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+      body: JSON.stringify(ticket)
+
+    }).then(() => {
+      this.setState({
+        step: 3,
+      });
+    });     
   }
 
   componentDidMount() {
@@ -143,6 +196,14 @@ class Client extends Component {
     return data;
   }  
 
+  countPrice() {
+    return Object.values(this.state.places).reduce((total, p) => total + parseInt(p.price), 0);
+  }  
+
+  stringifyPlaces() {
+    return Object.values(this.state.places).map(p => `Ряд ${p.row}, место ${p.number}`).join('; ');
+  }
+
   render() {
     switch(this.state.step) {
       case 0: 
@@ -155,11 +216,13 @@ class Client extends Component {
           </div>    
         );
       case 1: 
-        return<ClientHall showtime={this.state.showtime} disabled={this.state.disabled} handleAccept={this.handleAccept} handlePlaceToggle={this.handlePlaceToggle} />
+        return<ClientHall date={this.state.date} showtime={this.state.showtime} disabled={this.state.disabled} 
+          handleAccept={this.handleAccept} handlePlaceToggle={this.handlePlaceToggle} />
       case 2:
-        return<ClientPayment hall={this.state.hall} showtime={this.state.showtime} places={this.state.places} handlePayment={this.handlePayment} />
+        return<ClientPayment hall={this.state.hall} showtime={this.state.showtime} places={this.state.places} 
+          handlePayment={this.handlePayment} countPrice={this.countPrice}  stringifyPlaces={this.stringifyPlaces}/>
       case 3:
-        return<ClientTicket showtime={this.state.showtime} places={this.state.places} />        
+        return<ClientTicket showtime={this.state.showtime} places={this.state.places} stringifyPlaces={this.stringifyPlaces}/>        
       default: 
         return null
     }
