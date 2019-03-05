@@ -32,6 +32,14 @@ export default class MovieAddForm extends Component {
             Название фильма
             <input className="conf-step__input" type="text" placeholder="Например, &laquo;Гражданин Кейн&raquo;" name="title" required/>
           </label>
+          <label className="conf-step__label conf-step__label-fullsize" htmlFor="country">
+            Страна происхождения
+            <input className="conf-step__input" type="text" placeholder="Например, &laquo;США&raquo;" name="country" required/>
+          </label>          
+          <label className="conf-step__label conf-step__label-fullsize" htmlFor="description">
+            Описание(синопсис) фильма
+            <textarea className="conf-step__input" type="text" name="description" required></textarea>
+          </label>
           <label className="conf-step__label conf-step__label-fullsize" htmlFor="duration">
             Длительность, мин.
             <input className="conf-step__input" type="number" min="0" name="duration" required/>

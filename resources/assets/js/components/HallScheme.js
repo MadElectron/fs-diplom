@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom';
 
 const TYPES = ['disabled', 'standart', 'vip'];
 
-function matrix(rows, cols, value) {
-  return new Array(parseInt(rows)).fill(new Array(parseInt(cols)).fill(value));
-}
-
 export default class HallScheme extends Component {
   constructor(props) {
     super(props);
@@ -15,17 +11,16 @@ export default class HallScheme extends Component {
       hall: this.props.hall,
       rows: this.props.rows,
       places: this.props.places,
-      placeMatrix: matrix(this.props.rows, this.props.places, 1)
+      placeMatrix: this.props.placeMatrix
     };
 
     this.changeType = this.changeType.bind(this);
     this.handleSave = this.handleSave.bind(this);
-    // this.componentWillMount = this.componentWillMount.bind(this);
   }
 
   changeType(e) {
 
-    const [row, place] = e.target.getAttribute('data-key').split('_');
+    const [row, place] = e.target.getAttribute('data-key').split('_').map(x => parseInt(x));
     const placeMatrix = this.state.placeMatrix;
     
     let type = parseInt(e.target.getAttribute('data-type'))
@@ -54,8 +49,8 @@ export default class HallScheme extends Component {
       for(let j = 0; j < this.state.places; j++) {
         rowPlaces.push(
           <span 
-            key={`${i}_${j}`} data-key={`${i}_${j}`} data-type={1}
-            className="conf-step__chair conf-step__chair_standart" 
+            key={`${i}_${j}`} data-key={`${i}_${j}`} data-type={this.state.placeMatrix[i][j]}
+            className={`conf-step__chair conf-step__chair_${TYPES[this.state.placeMatrix[i][j]]}`} 
             onClick={this.changeType}>
           </span>
         );
@@ -68,7 +63,7 @@ export default class HallScheme extends Component {
   }
 
   handleSave() {
-    console.log('scheme:', this.state);
+    // console.log('scheme:', this.state);
 
     const hall = this.state.hall;
 
@@ -84,6 +79,20 @@ export default class HallScheme extends Component {
     );
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      rows: nextProps.rows,
+      places: nextProps.places,      
+      placeMatrix: nextProps.placeMatrix
+    });
+  }
+
+  componentWillMount() {
+    this.setState({
+      placeMatrix: this.props.placeMatrix
+    });
+  }
+
   componentWillUnmount() {
     console.log('will unmount');
     this.setState({
@@ -96,8 +105,6 @@ export default class HallScheme extends Component {
   }
 
   render() {
-    // @TODO: fieldset перекинуть в родительский компонент
-
     return (
       <div>
         <p className="conf-step__paragraph">Теперь вы можете указать типы кресел на схеме зала:</p>

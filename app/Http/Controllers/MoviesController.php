@@ -37,6 +37,8 @@ class MoviesController extends Controller
     {
         $movie = Movie::create([
             'title' => $request->title,
+            'description' => $request->description,
+            'country' => $request->country,
             'duration' => $request->duration,
         ]);
 

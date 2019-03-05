@@ -13,11 +13,13 @@ export default class HallRows extends Component {
         <div className="conf-step__legend">
           <label className="conf-step__label">
             Рядов, шт
-            <input type="text" className="conf-step__input" placeholder="10" onChange={this.props.rowsHandler}/>
+            <input type="text" className="conf-step__input" placeholder="10" 
+              value={this.props.rows} onChange={this.props.rowsHandler} disabled={this.props.rows}/>
           </label>
           <span className="multiplier">x</span>
           <label className="conf-step__label">
-            Мест, шт<input type="text" className="conf-step__input" placeholder="8"  onChange={this.props.placesHandler}/>
+            Мест, шт<input type="text" className="conf-step__input" placeholder="8" 
+              value={this.props.places} onChange={this.props.placesHandler} disabled={this.props.places ? 'disabled' : false}/>
           </label>
         </div>
       </div>

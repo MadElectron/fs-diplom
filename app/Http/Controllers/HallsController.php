@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Hall;
 use App\Place;
+use App\Showtime;
 
 class HallsController extends Controller
 {
@@ -54,9 +55,9 @@ class HallsController extends Controller
     public function show($id = null)
     {
         if ($id) {
-            $result = Hall::where('id','=', $id);
+            $result = Hall::with('prices', 'places')->where('id','=', $id)->get()->first();
         } else {
-            $result = Hall::all();
+            $result = Hall::with('prices', 'places')->get();
         }
 
         return response($result->toJson())
@@ -94,6 +95,8 @@ class HallsController extends Controller
      */
     public function destroy($id)
     {
+        Showtime::where('hall_id', '=', $id)->delete();
+        Place::where('hall_id', '=', $id)->delete();
         Hall::where('id','=', $id)->delete();
 
         return response('Hall deleted');

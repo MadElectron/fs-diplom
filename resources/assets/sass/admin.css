@@ -29,6 +29,9 @@ body {
 input[type='radio'], input[type='submit'], button, .conf-step__header, select {
   cursor: pointer; }
 
+textarea {
+  resize: vertical; }
+
 .text-center {
   text-align: center; }
 
@@ -433,7 +436,8 @@ input[type='radio'], input[type='submit'], button, .conf-step__header, select {
   padding: 10px 0;
   height: 40px;
   box-sizing: content-box;
-  width: calc(1440px * 0.5); }
+  width: calc(1440px * 0.5);
+  overflow: hidden; }
   .conf-step__seances-timeline-floating-time {
     content: '';
     position: absolute;

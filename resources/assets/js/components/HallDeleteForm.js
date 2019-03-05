@@ -20,7 +20,7 @@ export default class HallDeleteForm extends Component {
         },
         body: formData
       }).then(
-        () => document.location.reload()
+        // () => document.location.reload()
       );
 
       this.props.handler();

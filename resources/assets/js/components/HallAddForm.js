@@ -19,7 +19,7 @@ export default class HallAddForm extends Component {
         },
         body: formData
       }).then(
-        () => document.location.reload() // Don't know how to rerender the Hall list only :-(
+        // () => document.location.reload() // Don't know how to rerender the Hall list only :-(
       );
 
       this.props.handler();

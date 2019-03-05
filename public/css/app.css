@@ -68,6 +68,10 @@ select {
   cursor: pointer;
 }
 
+textarea {
+  resize: vertical;
+}
+
 .text-center {
   text-align: center;
 }
@@ -635,6 +639,7 @@ select {
   height: 40px;
   box-sizing: content-box;
   width: calc(1440px * 0.5);
+  overflow: hidden;
 }
 
 .conf-step__seances-timeline-floating-time {

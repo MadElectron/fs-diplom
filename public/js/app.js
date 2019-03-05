@@ -61811,10 +61811,7 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: formData
-      }).then(function () {
-        return document.location.reload();
-      } // Don't know how to rerender the Hall list only :-(
-      );
+      }).then();
       this.props.handler();
     }
   }, {
@@ -62003,6 +62000,12 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+function matrix(rows, cols, value) {
+  return Array(parseInt(rows)).fill(0).map(function (x) {
+    return Array(parseInt(cols)).fill(value);
+  });
+}
+
 var HallConfigurationBlock =
 /*#__PURE__*/
 function (_Component) {
@@ -62015,6 +62018,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(HallConfigurationBlock).call(this, props));
     _this.state = {
+      halls: _this.props.data,
       selectedHall: null,
       selectedHallRows: null,
       selectedHallPlaces: null
@@ -62031,8 +62035,12 @@ function (_Component) {
     key: "handleHallSelect",
     value: function handleHallSelect(el, e) {
       this.setState({
-        selectedHall: el
+        selectedHall: el,
+        selectedHallRows: el.rows || null,
+        selectedHallPlaces: el.places_in_row || null // selectedHallPlaceMatrix: null
+
       });
+      this.forceUpdate();
     }
   }, {
     key: "handleHallRowsChange",
@@ -62084,6 +62092,20 @@ function (_Component) {
       return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
     }
   }, {
+    key: "setPlaceMatrix",
+    value: function setPlaceMatrix(rows, p) {
+      var places = this.state.selectedHall.places;
+      var placeMatrix = matrix(rows, p, 1);
+
+      if (places) {
+        places.forEach(function (place) {
+          placeMatrix[place.row_number][place.number] = place.type;
+        });
+      }
+
+      return placeMatrix;
+    }
+  }, {
     key: "render",
     value: function render() {
       var hallRows = null;
@@ -62091,6 +62113,8 @@ function (_Component) {
 
       if (this.state.selectedHall) {
         hallRows = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallRows__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          rows: this.state.selectedHallRows || '',
+          places: this.state.selectedHallPlaces || '',
           rowsHandler: this.handleHallRowsChange,
           placesHandler: this.handleHallPlacesChange
         });
@@ -62101,7 +62125,8 @@ function (_Component) {
           hall: this.state.selectedHall,
           rows: this.state.selectedHallRows,
           places: this.state.selectedHallPlaces,
-          handleCancel: this.handleCancel
+          handleCancel: this.handleCancel,
+          placeMatrix: this.setPlaceMatrix(this.state.selectedHallRows, this.state.selectedHallPlaces)
         });
       }
 
@@ -62177,9 +62202,7 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: formData
-      }).then(function () {
-        return document.location.reload();
-      });
+      }).then();
       this.props.handler();
     }
   }, {
@@ -62784,7 +62807,9 @@ function (_Component) {
         type: "text",
         className: "conf-step__input",
         placeholder: "10",
-        onChange: this.props.rowsHandler
+        value: this.props.rows,
+        onChange: this.props.rowsHandler,
+        disabled: this.props.rows
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "multiplier"
       }, "x"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -62793,7 +62818,9 @@ function (_Component) {
         type: "text",
         className: "conf-step__input",
         placeholder: "8",
-        onChange: this.props.placesHandler
+        value: this.props.places,
+        onChange: this.props.placesHandler,
+        disabled: this.props.places ? 'disabled' : false
       }))));
     }
   }]);
@@ -62849,10 +62876,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 var TYPES = ['disabled', 'standart', 'vip'];
 
-function matrix(rows, cols, value) {
-  return new Array(parseInt(rows)).fill(new Array(parseInt(cols)).fill(value));
-}
-
 var HallScheme =
 /*#__PURE__*/
 function (_Component) {
@@ -62868,18 +62891,19 @@ function (_Component) {
       hall: _this.props.hall,
       rows: _this.props.rows,
       places: _this.props.places,
-      placeMatrix: matrix(_this.props.rows, _this.props.places, 1)
+      placeMatrix: _this.props.placeMatrix
     };
     _this.changeType = _this.changeType.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_assertThisInitialized(_this))); // this.componentWillMount = this.componentWillMount.bind(this);
-
+    _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
   _createClass(HallScheme, [{
     key: "changeType",
     value: function changeType(e) {
-      var _e$target$getAttribut = e.target.getAttribute('data-key').split('_'),
+      var _e$target$getAttribut = e.target.getAttribute('data-key').split('_').map(function (x) {
+        return parseInt(x);
+      }),
           _e$target$getAttribut2 = _slicedToArray(_e$target$getAttribut, 2),
           row = _e$target$getAttribut2[0],
           place = _e$target$getAttribut2[1];
@@ -62909,8 +62933,8 @@ function (_Component) {
           rowPlaces.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
             key: "".concat(i, "_").concat(j),
             "data-key": "".concat(i, "_").concat(j),
-            "data-type": 1,
-            className: "conf-step__chair conf-step__chair_standart",
+            "data-type": this.state.placeMatrix[i][j],
+            className: "conf-step__chair conf-step__chair_".concat(TYPES[this.state.placeMatrix[i][j]]),
             onClick: this.changeType
           }));
         }
@@ -62926,7 +62950,7 @@ function (_Component) {
   }, {
     key: "handleSave",
     value: function handleSave() {
-      console.log('scheme:', this.state);
+      // console.log('scheme:', this.state);
       var hall = this.state.hall;
       fetch("/places/add/".concat(hall.id), {
         method: "POST",
@@ -62938,6 +62962,22 @@ function (_Component) {
         return console.log(resp);
       } // () => document.location.reload() // Don't know how to rerender the Hall list only :-(
       );
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      this.setState({
+        rows: nextProps.rows,
+        places: nextProps.places,
+        placeMatrix: nextProps.placeMatrix
+      });
+    }
+  }, {
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      this.setState({
+        placeMatrix: this.props.placeMatrix
+      });
     }
   }, {
     key: "componentWillUnmount",
@@ -62953,7 +62993,6 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      // @TODO: fieldset перекинуть в родительский компонент
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "conf-step__paragraph"
       }, "\u0422\u0435\u043F\u0435\u0440\u044C \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u0442\u044C \u0442\u0438\u043F\u044B \u043A\u0440\u0435\u0441\u0435\u043B \u043D\u0430 \u0441\u0445\u0435\u043C\u0435 \u0437\u0430\u043B\u0430:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -63070,6 +63109,23 @@ function (_Component) {
         type: "text",
         placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \xAB\u0413\u0440\u0430\u0436\u0434\u0430\u043D\u0438\u043D \u041A\u0435\u0439\u043D\xBB",
         name: "title",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label conf-step__label-fullsize",
+        htmlFor: "country"
+      }, "\u0421\u0442\u0440\u0430\u043D\u0430 \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u044F", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "conf-step__input",
+        type: "text",
+        placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \xAB\u0421\u0428\u0410\xBB",
+        name: "country",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label conf-step__label-fullsize",
+        htmlFor: "description"
+      }, "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435(\u0441\u0438\u043D\u043E\u043F\u0441\u0438\u0441) \u0444\u0438\u043B\u044C\u043C\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+        className: "conf-step__input",
+        type: "text",
+        name: "description",
         required: true
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "conf-step__label conf-step__label-fullsize",
