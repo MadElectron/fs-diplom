@@ -74,8 +74,8 @@ export default class HallScheme extends Component {
       },
       body: JSON.stringify(this.state.placeMatrix)
     }).then(
-      resp => console.log(resp)
-      // () => document.location.reload() // Don't know how to rerender the Hall list only :-(
+      // resp => console.log(resp);
+      () => document.location.reload() // Don't know how to rerender the Hall list only :-(
     );
   }
 

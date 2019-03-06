@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Movie;
 
 class MoviesController extends Controller
@@ -41,6 +42,17 @@ class MoviesController extends Controller
             'country' => $request->country,
             'duration' => $request->duration,
         ]);
+
+        $this->validate($request, [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = $movie->id;
+            $destinationPath = public_path('/i/posters');
+            imagejpeg(imagecreatefromstring(file_get_contents("$image")), "$destinationPath/$name.jpg");
+        }
 
         return response('Movie added');
     }
@@ -93,6 +105,10 @@ class MoviesController extends Controller
     public function destroy($id)
     {
         Movie::where('id','=', $id)->delete();
+    
+        $destinationPath = public_path('/i/posters');
+        Storage::delete("$destinationPath/$id.jpg");
+        // @TODO: Не удаляется файл
 
         return response('Movie deleted');
     }

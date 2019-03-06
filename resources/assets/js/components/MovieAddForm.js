@@ -25,6 +25,22 @@ export default class MovieAddForm extends Component {
       this.props.handler();
     }
 
+    previewFile() {
+      let preview = document.getElementById('preview');
+      let file    = document.querySelector('input[name="image"]').files[0];
+      let reader  = new FileReader();
+
+      reader.onloadend = function () {
+          preview.src = reader.result;
+      }
+
+      if (file) {
+          reader.readAsDataURL(file);
+      } else {
+          preview.src = "";
+      }      
+    }
+
     render() {
       return (
         <form action="add_movie" method="post" acceptCharset="utf-8" onSubmit={this.handleSubmit}>
@@ -40,10 +56,16 @@ export default class MovieAddForm extends Component {
             Описание(синопсис) фильма
             <textarea className="conf-step__input" type="text" name="description" required></textarea>
           </label>
-          <label className="conf-step__label conf-step__label-fullsize" htmlFor="duration">
+          <label className="conf-step__label conf-step__label-fullsize" htmlFor="duration"> 
             Длительность, мин.
             <input className="conf-step__input" type="number" min="0" name="duration" required/>
+          </label>
+          <label className="conf-step__label conf-step__label-fullsize" htmlFor="description">
+            Добавить изображение
+            <input className="conf-step__input" type="file" 
+              name="image" onChange={this.previewFile} required />
           </label>          
+          <img id="preview" src="" height="150" alt="Image preview..." />
           <div className="conf-step__buttons text-center">
             <input type="submit" value="Добавить фильм" className="conf-step__button conf-step__button-accent" />
             <button className="conf-step__button conf-step__button-regular" onClick={this.props.handler}>Отменить</button>            

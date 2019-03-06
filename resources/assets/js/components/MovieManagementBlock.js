@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import MovieAddPopup from './MovieAddPopup';
 import MovieDeletePopup from './MovieDeletePopup';
+import ShowtimeAddPopup from './ShowtimeAddPopup';
 
 const TIMELINE_STEP = 5;
 
@@ -13,9 +14,13 @@ export default class MovieMangementBlock extends Component {
       this.state = {
         createPopupOn: false,
         deletePopupOn: false,
+        createStPopupOn: false,
+
         data: null,
         deleteId: null,
-        showtimes: {}
+        showtimes: {},
+        stData: null,
+        stTime: null,
       };
 
       this.handleCreateClick = this.handleCreateClick.bind(this);
@@ -25,6 +30,7 @@ export default class MovieMangementBlock extends Component {
       this.handleDrop = this.handleDrop.bind(this);
       this.save = this.save.bind(this);
       this.cancel = this.cancel.bind(this);
+      this.reInit = this.reInit.bind(this);
     }
 
     handleCreateClick() {
@@ -56,12 +62,16 @@ export default class MovieMangementBlock extends Component {
 
       let floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
 
+      console.log(floatingTime)
+
       if (e.target.classList.contains('conf-step__seances-timeline')){
         // Duplicating handleDrop code cause zero access to e.dataTransfer
 
         let pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
         let width = parseInt(getComputedStyle(e.target).width);
         let time = this.intToTimeString(pos / width * 24 * 60);
+
+
 
         if (!floatingTime) {
           floatingTime = document.createElement('p');  
@@ -70,10 +80,19 @@ export default class MovieMangementBlock extends Component {
         } 
 
         floatingTime.style.left = pos + 'px';
-        floatingTime.textContent = time;        
-      } else {
+        floatingTime.textContent = time;      
+
+        this.setState({
+          stTime: time,
+        })  
+      } 
+      else {
         if (floatingTime) {  
           floatingTime.remove();
+
+          this.setState({
+            stTime: null,
+          })            
         }
       }
     }
@@ -82,6 +101,7 @@ export default class MovieMangementBlock extends Component {
       e.preventDefault();
 
       if (e.target.classList.contains('conf-step__seances-timeline')){
+
         const data = JSON.parse(e.dataTransfer.getData("text"));
 
         let floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
@@ -90,8 +110,13 @@ export default class MovieMangementBlock extends Component {
         data.parentWidth = parseInt(getComputedStyle(e.target).width);
         data.hallId = e.target.dataset.id;
         data.pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
-  
-        this.addShowtime(data);
+
+        this.setState({
+          createStPopupOn: true,
+          stData: data,
+        });
+        
+        // this.addShowtime(data);
       }
     }
 
@@ -205,7 +230,7 @@ export default class MovieMangementBlock extends Component {
           data-title={el.title}
           data-duration={el.duration}
           draggable >
-          <img className="conf-step__movie-poster" alt="poster" src="i/poster.png" />
+          <img className="conf-step__movie-poster" alt="poster" src={`i/posters/${el.id}.jpg`} />
           <h3 className="conf-step__movie-title">{el.title}</h3>
           <p className="conf-step__movie-duration">{el.duration} минут</p>
         </div>
@@ -240,6 +265,15 @@ export default class MovieMangementBlock extends Component {
         this.forceUpdate()
       );
     }
+
+    reInit() {
+      this.setState({
+        stData: null,
+        stTime: null,
+        createStPopupOn: false,
+        
+      });
+    }
     
     componentDidUpdate() {
         if (document.getElementById('popups_movies')) {
@@ -248,6 +282,8 @@ export default class MovieMangementBlock extends Component {
             <div>
               <MovieAddPopup active={this.state.createPopupOn}/>
               <MovieDeletePopup active={this.state.deletePopupOn} deletedMovie={this.state.deletedHall}/>
+              <ShowtimeAddPopup active={this.state.createStPopupOn} halls={this.props.data} 
+                addShowtime={this.addShowtime} data={this.state.stData} time={this.state.stTime} reInit={this.reInit} />
             </div>
             , document.getElementById('popups_movies'));
         }

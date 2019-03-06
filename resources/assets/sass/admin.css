@@ -436,8 +436,7 @@ textarea {
   padding: 10px 0;
   height: 40px;
   box-sizing: content-box;
-  width: calc(1440px * 0.5);
-  overflow: hidden; }
+  width: calc(1440px * 0.5); }
   .conf-step__seances-timeline-floating-time {
     content: '';
     position: absolute;
