@@ -32,6 +32,9 @@ input[type='radio'], input[type='submit'], button, .conf-step__header, select {
 textarea {
   resize: vertical; }
 
+fieldset {
+  border: none; }
+
 .text-center {
   text-align: center; }
 

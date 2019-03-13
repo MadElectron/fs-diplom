@@ -60715,7 +60715,8 @@ function (_Component) {
         h = _map2[0];
         m = _map2[1];
         (result[st.hall_id] || (result[st.hall_id] = [])).push({
-          id: st.movie.id,
+          id: st.id,
+          movieId: st.movie.id,
           title: st.movie.title,
           duration: st.movie.duration,
           startTime: "".concat(h, ":").concat(m),
@@ -63530,6 +63531,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MovieAddPopup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MovieAddPopup */ "./resources/assets/js/components/MovieAddPopup.js");
 /* harmony import */ var _MovieDeletePopup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MovieDeletePopup */ "./resources/assets/js/components/MovieDeletePopup.js");
 /* harmony import */ var _ShowtimeAddPopup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ShowtimeAddPopup */ "./resources/assets/js/components/ShowtimeAddPopup.js");
+/* harmony import */ var _ShowtimeDeletePopup__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ShowtimeDeletePopup */ "./resources/assets/js/components/ShowtimeDeletePopup.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
@@ -63561,6 +63563,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+
 var TIMELINE_STEP = 5;
 
 var MovieMangementBlock =
@@ -63578,6 +63581,7 @@ function (_Component) {
       createPopupOn: false,
       deletePopupOn: false,
       createStPopupOn: false,
+      deleteStPopupOn: false,
       data: null,
       deleteId: null,
       showtimes: {},
@@ -63589,6 +63593,8 @@ function (_Component) {
     _this.handleDragOver = _this.handleDragOver.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDragStart = _this.handleDragStart.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleChangeHall = _this.handleChangeHall.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleChangeTime = _this.handleChangeTime.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.save = _this.save.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.cancel = _this.cancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.reInit = _this.reInit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -63607,7 +63613,15 @@ function (_Component) {
     value: function handleDeleteClick(el, e) {
       this.setState({
         deletePopupOn: true,
-        deletedHall: el
+        deletedMovie: el
+      });
+    }
+  }, {
+    key: "handleStDeleteClick",
+    value: function handleStDeleteClick(el, e) {
+      this.setState({
+        deleteStPopupOn: true,
+        deletedShowtime: el
       });
     }
   }, {
@@ -63626,10 +63640,8 @@ function (_Component) {
     value: function handleDragOver(e) {
       e.preventDefault();
       var floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
-      console.log(floatingTime);
 
       if (e.target.classList.contains('conf-step__seances-timeline')) {
-        // Duplicating handleDrop code cause zero access to e.dataTransfer
         var pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
         var width = parseInt(getComputedStyle(e.target).width);
         var time = this.intToTimeString(pos / width * 24 * 60);
@@ -63666,6 +63678,7 @@ function (_Component) {
         data.parentWidth = parseInt(getComputedStyle(e.target).width);
         data.hallId = e.target.dataset.id;
         data.pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
+        data.time = this.intToTimeString(data.pos / data.parentWidth * 24 * 60);
         this.setState({
           createStPopupOn: true,
           stData: data
@@ -63694,6 +63707,7 @@ function (_Component) {
   }, {
     key: "timeToInt",
     value: function timeToInt(t) {
+      // Helper
       var _t$split$map = t.split(':').map(function (x) {
         return parseInt(x);
       }),
@@ -63720,26 +63734,31 @@ function (_Component) {
     }
   }, {
     key: "addShowtime",
-    value: function addShowtime(data) {
+    value: function addShowtime(e) {
+      e.preventDefault();
+      var data = this.state.stData;
+      console.log('ADdShowtime data', data);
       var width = data.parentWidth * data.duration / 24 / 60;
-      var time = this.intToTimeString(data.pos / data.parentWidth * 24 * 60);
+      var pos = data.parentWidth * this.timeToInt(data.time) / 24 / 60; // let time = this.intToTimeString(pos / width * 24 * 60);     
+
       var style = {
         width: width,
         color: data.color,
-        left: data.pos
+        left: pos
       };
       var showTimes = this.state.showtimes;
       (showTimes[data.hallId] || (showTimes[data.hallId] = [])).push({
-        id: data.id,
+        movieId: data.id,
         title: data.title,
         duration: data.duration,
-        startTime: time,
+        startTime: data.time,
         style: style,
         initial: false
       });
       this.setState({
         showtimes: showTimes
       });
+      this.reInit();
       this.forceUpdate();
     }
   }, {
@@ -63756,6 +63775,10 @@ function (_Component) {
         var hallShowtimes = [];
 
         if (_this2.state.showtimes && _this2.state.showtimes.hasOwnProperty(el.id)) {
+          _this2.state.showtimes[el.id].forEach(function (el) {
+            return console.log(el);
+          });
+
           _this2.state.showtimes[el.id].forEach(function (el, index) {
             return hallShowtimes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
               key: index,
@@ -63764,6 +63787,9 @@ function (_Component) {
                 width: el.style.width,
                 left: el.style.left,
                 backgroundColor: el.style.color
+              },
+              onDoubleClick: function onDoubleClick(e) {
+                return _this2.handleStDeleteClick(el, e);
               }
             }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
               className: "conf-step__seances-movie-title"
@@ -63836,6 +63862,7 @@ function (_Component) {
       Object.values(this.state.showtimes).forEach(function (hall) {
         hall.forEach(function (st) {
           st.initial = true;
+          st.style.color = 'white';
         });
       });
       fetch("/showtimes/add", {
@@ -63844,7 +63871,8 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(showtimes)
-      }).then(this.forceUpdate());
+      }).then( // () => document.location.reload()
+      this.forceUpdate());
     }
   }, {
     key: "reInit",
@@ -63856,37 +63884,67 @@ function (_Component) {
       });
     }
   }, {
+    key: "handleChangeHall",
+    value: function handleChangeHall(e) {
+      var data = this.state.stData;
+      data.hallId = e.target.value;
+      this.setState({
+        stData: data
+      });
+    }
+  }, {
+    key: "handleChangeTime",
+    value: function handleChangeTime(e) {
+      var data = this.state.stData;
+      data.time = e.target.value;
+      this.setState({
+        stData: data
+      });
+    }
+  }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
+      var _this4 = this;
+
       if (document.getElementById('popups_movies')) {
         react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieAddPopup__WEBPACK_IMPORTED_MODULE_2__["default"], {
           active: this.state.createPopupOn
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieDeletePopup__WEBPACK_IMPORTED_MODULE_3__["default"], {
           active: this.state.deletePopupOn,
-          deletedMovie: this.state.deletedHall
+          deletedMovie: this.state.deletedMovie
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeAddPopup__WEBPACK_IMPORTED_MODULE_4__["default"], {
           active: this.state.createStPopupOn,
           halls: this.props.data,
-          addShowtime: this.addShowtime,
           data: this.state.stData,
           time: this.state.stTime,
-          reInit: this.reInit
+          reInit: this.reInit,
+          addShowtime: function addShowtime(e) {
+            return _this4.addShowtime(e);
+          },
+          handleChangeHall: this.handleChangeHall,
+          handleChangeTime: this.handleChangeTime
+        }), "}", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeDeletePopup__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          active: this.state.deleteStPopupOn,
+          deletedShowtime: this.state.deletedShowtime
         })), document.getElementById('popups_movies'));
       }
     }
   }, {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(props) {
-      var _this4 = this;
+      var _this5 = this;
 
-      var showtimes = props.showtimes;
+      var showtimes = props.showtimes; // let timelineNode = document.querySelector('.conf-step__seances-timeline')[0];
+      // let width = timelineNode.getComputedStyle('width');
+
+      var width = 720;
 
       if (showtimes) {
         Object.values(showtimes).forEach(function (hall) {
           return hall.forEach(function (st) {
             st.style = {
-              width: 770 * st.duration / 24 / 60,
-              left: 770 * _this4.timeToInt(st.startTime) / 24 / 60,
+              width: width * st.duration / 24 / 60,
+              left: width * _this5.timeToInt(st.startTime) / 24 / 60,
               color: 'white'
             };
           });
@@ -63952,13 +64010,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
 
@@ -63968,32 +64026,12 @@ function (_Component) {
   _inherits(ShowtimeAddForm, _Component);
 
   function ShowtimeAddForm(props) {
-    var _this;
-
     _classCallCheck(this, ShowtimeAddForm);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeAddForm).call(this, props));
-    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
+    return _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeAddForm).call(this, props)); // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   _createClass(ShowtimeAddForm, [{
-    key: "handleSubmit",
-    value: function handleSubmit(e) {
-      e.preventDefault();
-      var formData = new FormData(e.target);
-      fetch('/movies/add', {
-        method: "POST",
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: formData
-      }).then(function () {
-        return document.location.reload();
-      });
-      this.props.handler();
-    }
-  }, {
     key: "previewFile",
     value: function previewFile() {
       var preview = document.getElementById('preview');
@@ -64022,29 +64060,27 @@ function (_Component) {
         return result.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
           key: el.id,
           value: el.id
-        }, el.title) // selected={this.props.data.hallId == el.id}
-        );
+        }, el.title));
       });
       return result;
     }
   }, {
     key: "render",
     value: function render() {
-      console.log(this.props.data);
-      console.log(this.props.halls);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         action: "add_movie",
         method: "post",
         acceptCharset: "utf-8",
-        onSubmit: this.handleSubmit
+        onSubmit: this.props.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "conf-step__label conf-step__label-fullsize",
         htmlFor: "title"
       }, "\u0417\u0430\u043B", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-        value: this.props.data ? this.props.data.hallId : '',
+        defaultValue: this.props.data ? this.props.data.hallId : '',
         className: "conf-step__input",
         type: "text",
         name: "title",
+        onChange: this.props.handleChangeHall,
         required: true
       }, this.buildHallList())), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "conf-step__label conf-step__label-fullsize",
@@ -64052,8 +64088,10 @@ function (_Component) {
       }, "\u0412\u0440\u0435\u043C\u044F", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         className: "conf-step__input",
         type: "time",
+        step: "300",
         name: "start_time",
         defaultValue: this.props.time,
+        onChange: this.props.handleChangeTime,
         required: true
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "conf-step__buttons text-center"
@@ -64063,7 +64101,7 @@ function (_Component) {
         className: "conf-step__button conf-step__button-accent"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "conf-step__button conf-step__button-regular",
-        onClick: this.props.handler
+        onClick: this.props.handleCancel
       }, "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C")));
     }
   }]);
@@ -64137,7 +64175,7 @@ function (_Component) {
 
       this.setState({
         active: false
-      }); // this.props.reInit();
+      });
     }
   }, {
     key: "componentWillReceiveProps",
@@ -64175,11 +64213,218 @@ function (_Component) {
       })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "popup__wrapper"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeAddForm__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        handler: this.close,
+        halls: this.props.halls,
         data: this.props.data,
         time: this.props.time,
-        halls: this.props.halls,
-        handleSubmit: this.props.addShowtime
+        handleCancel: this.close,
+        handleSubmit: this.props.addShowtime,
+        handleChangeHall: this.props.handleChangeHall,
+        handleChangeTime: this.props.handleChangeTime
+      })))));
+    }
+  }]);
+
+  return ShowtimeAddPopup;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/ShowtimeDeleteForm.js":
+/*!**************************************************************!*\
+  !*** ./resources/assets/js/components/ShowtimeDeleteForm.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ShowtimeDeleteForm; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+var ShowtimeDeleteForm =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ShowtimeDeleteForm, _Component);
+
+  function ShowtimeDeleteForm(props) {
+    var _this;
+
+    _classCallCheck(this, ShowtimeDeleteForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeDeleteForm).call(this, props));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(ShowtimeDeleteForm, [{
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      var formData = new FormData(e.target);
+      var url = "/showtimes/delete/".concat(this.props.deletedShowtime.id);
+      fetch(url, {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+      }).then(function () {
+        return document.location.reload();
+      });
+      this.props.handler();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        acceptCharset: "utf-8",
+        onSubmit: this.handleSubmit
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u0441\u0435\u0430\u043D\u0441?"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__buttons text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "submit",
+        value: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C",
+        className: "conf-step__button conf-step__button-accent"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-regular",
+        onClick: this.props.handler
+      }, "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C")));
+    }
+  }]);
+
+  return ShowtimeDeleteForm;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/ShowtimeDeletePopup.js":
+/*!***************************************************************!*\
+  !*** ./resources/assets/js/components/ShowtimeDeletePopup.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ShowtimeAddPopup; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ShowtimeDeleteForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowtimeDeleteForm */ "./resources/assets/js/components/ShowtimeDeleteForm.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+
+var ShowtimeAddPopup =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ShowtimeAddPopup, _Component);
+
+  function ShowtimeAddPopup(props) {
+    var _this;
+
+    _classCallCheck(this, ShowtimeAddPopup);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeAddPopup).call(this, props));
+    _this.state = {
+      active: _this.props.active
+    };
+    _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(ShowtimeAddPopup, [{
+    key: "close",
+    value: function close(e) {
+      if (e !== undefined) {
+        // Popup closed manually
+        e.preventDefault();
+      }
+
+      this.setState({
+        active: false
+      });
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(props) {
+      this.setState({
+        active: props.active
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var className = "popup";
+
+      if (this.state.active) {
+        className += " active";
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: className
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__content"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__header"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "popup__title"
+      }, "\u0423\u0434\u0430\u043B\u0435\u043D\u0438\u0435 \u0441\u0435\u0430\u043D\u0441\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        className: "popup__dismiss",
+        href: "#",
+        onClick: this.close
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "i/close.png",
+        alt: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeDeleteForm__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        handler: this.close,
+        deletedShowtime: this.props.deletedShowtime
       })))));
     }
   }]);

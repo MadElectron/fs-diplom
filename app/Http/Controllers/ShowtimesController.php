@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Showtime;
+use App\Ticket;
 
 class ShowtimesController extends Controller
 {
@@ -41,7 +42,7 @@ class ShowtimesController extends Controller
             foreach($showtimes as $st) {
                 Showtime::create([
                     'hall_id' => $hallId,
-                    'movie_id' => $st['id'],
+                    'movie_id' => $st['movieId'],
                     'start_time' => new \DateTime($st['startTime']),
                 ]);    
             }
@@ -100,11 +101,8 @@ class ShowtimesController extends Controller
      */
     public function destroy($id = null)
     {
-        if ($id) {
-            Showtime::where('id','=', $id)->delete();
-        } else {
-            Showtime::all()->delete();
-        }
+        Ticket::where('showtime_id','=',$id)->delete();
+        Showtime::where('id','=', $id)->delete();
 
         return response('Showtime deleted');    
     }

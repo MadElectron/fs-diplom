@@ -61,7 +61,8 @@ class App extends Component {
       [h, m] = [h, m].map(x => (x < 10 ? '0' : '') + x);
 
       (result[st.hall_id] || (result[st.hall_id] = [])).push({
-        id: st.movie.id,
+        id: st.id,
+        movieId: st.movie.id,
         title: st.movie.title,
         duration: st.movie.duration,
         startTime: `${h}:${m}`,

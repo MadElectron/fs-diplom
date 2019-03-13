@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ShowtimeAddForm from './ShowtimeAddForm';
+import ShowtimeDeleteForm from './ShowtimeDeleteForm';
 
 export default class ShowtimeAddPopup extends Component {
     constructor(props) {
@@ -20,7 +20,6 @@ export default class ShowtimeAddPopup extends Component {
       this.setState({
         active: false
       });
-
     }
 
     componentWillReceiveProps(props) {
@@ -42,15 +41,13 @@ export default class ShowtimeAddPopup extends Component {
               <div className="popup__content">
                 <div className="popup__header">
                   <h2 className="popup__title">
-                    Добавление сеанса
+                    Удаление сеанса
                     <a className="popup__dismiss" href="#" onClick={this.close}><img src="i/close.png" alt="Закрыть" /></a>
                   </h2>
 
                 </div>
                 <div className="popup__wrapper">
-                  <ShowtimeAddForm halls={this.props.halls}  data={this.props.data} time={this.props.time}
-                  handleCancel={this.close} handleSubmit={this.props.addShowtime} 
-                  handleChangeHall={this.props.handleChangeHall} handleChangeTime={this.props.handleChangeTime} />
+                    <ShowtimeDeleteForm handler={this.close} deletedShowtime={this.props.deletedShowtime} />
                 </div>
               </div>
             </div>
