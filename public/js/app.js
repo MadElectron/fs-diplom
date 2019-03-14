@@ -60639,6 +60639,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/**
+ * Main admin component
+ */
 
 var App =
 /*#__PURE__*/
@@ -60652,12 +60655,18 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
-      data: null,
-      movieData: null,
+      halls: null,
+      movies: null,
       showtimes: null
     };
     return _this;
-  }
+  } // ====== Primary methods =====
+
+  /**
+   * Get hall list from db
+   * @return {Promise}
+   */
+
 
   _createClass(App, [{
     key: "getHallList",
@@ -60671,6 +60680,11 @@ function (_Component) {
         return resp.json();
       });
     }
+    /**
+     * Get movie list from db
+     * @return {Promise}
+     */
+
   }, {
     key: "getMovieList",
     value: function getMovieList() {
@@ -60683,6 +60697,11 @@ function (_Component) {
         return resp.json();
       });
     }
+    /**
+     * Get showtime list from db
+     * @return {Promise}
+     */
+
   }, {
     key: "getShowtimeList",
     value: function getShowtimeList() {
@@ -60694,7 +60713,14 @@ function (_Component) {
       }).then(function (resp) {
         return resp.json();
       });
-    }
+    } // ====== Helpers =====
+
+    /**
+     * Convert showtimes array to synthetic data structure, used in Movie Management Block
+     * @param {data} data
+     * @return {Object} result
+     */
+
   }, {
     key: "showtimesToMatrix",
     value: function showtimesToMatrix(data) {
@@ -60726,21 +60752,26 @@ function (_Component) {
       });
 
       return result;
-    }
+    } // ====== Events ======
+
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
 
       console.log('App mounted');
+      /**
+       * After mounting set halls, movies and showtimes tio state
+       */
+
       this.getHallList().then(function (json) {
         _this2.setState({
-          data: json
+          halls: json
         });
       });
       this.getMovieList().then(function (json) {
         _this2.setState({
-          movieData: json
+          movies: json
         });
       });
       this.getShowtimeList().then(function (json) {
@@ -60759,7 +60790,7 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
         className: "conf-step__title"
       }, "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043B\u0430\u043C\u0438")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallManagementBlock__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        data: this.state.data
+        data: this.state.halls
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
         className: "conf-step"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
@@ -60771,7 +60802,7 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "conf-step__paragraph"
       }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u043B \u0434\u043B\u044F \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallConfigurationBlock__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        data: this.state.data
+        data: this.state.halls
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
         className: "conf-step"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
@@ -60783,7 +60814,7 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "conf-step__paragraph"
       }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u043B \u0434\u043B\u044F \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallPriceBlock__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        data: this.state.data
+        data: this.state.halls
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
         className: "conf-step"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
@@ -60793,8 +60824,8 @@ function (_Component) {
       }, "\u0421\u0435\u0442\u043A\u0430 \u0441\u0435\u0430\u043D\u0441\u043E\u0432")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "conf-step__wrapper"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieManagementBlock__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        data: this.state.data,
-        movieData: this.state.movieData,
+        data: this.state.halls,
+        movieData: this.state.movies,
         showtimes: this.state.showtimes
       }))));
     }
@@ -60852,6 +60883,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Main client component
+ */
 
 var Client =
 /*#__PURE__*/
@@ -60866,12 +60900,25 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Client).call(this, props));
     _this.state = {
       date: new Date(),
+      // Current date
       disabled: true,
+      // Book button (on step 1) 'disabled' attr
       movieData: null,
+      // Movies list
       hall: null,
+      // Chosen hall
       showtime: null,
+      // Chosen showtime
       places: {},
+      // Places matrix on scheme
       step: 0
+      /* Step of booking:
+          0 - showtime choosing,
+          1 - place choosing
+          2 - chosen places and price
+          3 - qr code
+      */
+
     };
     _this.handleAccept = _this.handleAccept.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDateChange = _this.handleDateChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -60881,7 +60928,13 @@ function (_Component) {
     _this.countPrice = _this.countPrice.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.stringifyPlaces = _this.stringifyPlaces.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
-  }
+  } // ====== Primart methods =====
+
+  /**
+   * Get movie list from db
+   * @return {Promise}
+   */
+
 
   _createClass(Client, [{
     key: "getMovieList",
@@ -60895,6 +60948,11 @@ function (_Component) {
         return resp.json();
       });
     }
+    /**
+     * Get showtime list from db
+     * @return {Promise}
+     */
+
   }, {
     key: "getShowtime",
     value: function getShowtime(id) {
@@ -60907,6 +60965,11 @@ function (_Component) {
         return resp.json();
       });
     }
+    /**
+     * Get ticket list from db
+     * @return {Promise}
+     */
+
   }, {
     key: "getTickets",
     value: function getTickets() {
@@ -60918,31 +60981,13 @@ function (_Component) {
       }).then(function (resp) {
         return resp.json();
       });
-    }
-  }, {
-    key: "setTakenPlaces",
-    value: function setTakenPlaces(showtime, tickets) {
-      var _this2 = this;
+    } // ====== Handlers ======
 
-      var places = showtime.hall.places;
-      tickets = tickets.filter(function (ticket) {
-        return new Date(ticket.date).toLocaleDateString() === _this2.state.date.toLocaleDateString() && ticket.showtime_id === showtime.id;
-      });
-      var ticketPlaces = [].concat.apply([], tickets.map(function (ticket) {
-        return ticket.places.map(function (place) {
-          return place.place_id;
-        });
-      }));
-      places.forEach(function (place) {
-        if (ticketPlaces.find(function (ticketPlace) {
-          return ticketPlace === place.id;
-        })) {
-          place.type = 3;
-        }
-      });
-      showtime.hall.places = places;
-      return showtime;
-    }
+    /**
+     * Handle date click in nav
+     * @param {Event} e
+     */
+
   }, {
     key: "handleDateChange",
     value: function handleDateChange(e) {
@@ -60952,21 +60997,32 @@ function (_Component) {
       });
       this.forceUpdate();
     }
+    /**
+     * Handle showtime href click
+     * @param {Event} e
+     */
+
   }, {
     key: "handleShowtimeChoose",
     value: function handleShowtimeChoose(e) {
-      var _this3 = this;
+      var _this2 = this;
 
-      e.preventDefault();
+      e.preventDefault(); // Set taken places to chosen showtime and Pass to step 1
+
       this.getShowtime(e.target.dataset.id).then(function (json) {
-        return _this3.getTickets().then(function (tickets) {
-          return _this3.setState({
+        return _this2.getTickets().then(function (tickets) {
+          return _this2.setState({
             step: 1,
-            showtime: _this3.setTakenPlaces(json, tickets)
+            showtime: _this2.setTakenPlaces(json, tickets)
           });
         });
       });
     }
+    /**
+     * Handle place click, toggling place type
+     * @param {Event} e
+     */
+
   }, {
     key: "handlePlaceToggle",
     value: function handlePlaceToggle(e) {
@@ -60975,6 +61031,7 @@ function (_Component) {
       var places = this.state.places;
 
       if (data.type != 'selected') {
+        // If place is selected, add to chosen places array
         places[data.id] = {
           row: data.row,
           number: data.number,
@@ -60985,17 +61042,24 @@ function (_Component) {
         e.target.classList.remove("buying-scheme__chair_".concat(data.type));
         e.target.classList.add("buying-scheme__chair_selected");
       } else {
+        // Delete from chosen places array
         e.target.dataset.type = places[data.id].type;
         e.target.classList.remove("buying-scheme__chair_selected");
         e.target.classList.add("buying-scheme__chair_".concat(places[data.id].type));
         delete places[data.id];
-      }
+      } // Set chosen places array
+      // And enable button to next step if places are chosen
+
 
       this.setState({
         places: places,
         disabled: Object.keys(places).length === 0
       });
     }
+    /**
+     * Handle Book button click
+     */
+
   }, {
     key: "handleAccept",
     value: function handleAccept() {
@@ -61004,18 +61068,24 @@ function (_Component) {
         step: 2
       });
     }
+    /**
+     * Handle Get Qr Code button click
+     */
+
   }, {
     key: "handlePayment",
     value: function handlePayment() {
-      var _this4 = this;
+      var _this3 = this;
 
-      var places = Object.keys(this.state.places);
+      var places = Object.keys(this.state.places); // Chosen Places ids
+
       var ticket = {
         showtime: this.state.showtime.id,
         date: this.state.date,
         price: this.countPrice(),
         places: places
-      };
+      }; // Add ticket to db, then pass to last step
+
       fetch('/tickets/add', {
         method: "POST",
         headers: {
@@ -61023,26 +61093,56 @@ function (_Component) {
         },
         body: JSON.stringify(ticket)
       }).then(function () {
-        _this4.setState({
+        _this3.setState({
           step: 3
         });
       });
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this5 = this;
+    } // ====== Helpers ======
 
-      console.log('Client mounted');
-      this.getMovieList().then(function (json) {
-        _this5.setState({
-          movieData: _this5.convertShowtimesToHalls(json)
-        });
-      });
-    }
+    /**
+     * Set taken places on current showtime place matrix
+     * @param {Object} showtime
+     * @param {Array} tickets
+     * @return {Object}
+     */
+
   }, {
-    key: "convertShowtimesToHalls",
-    value: function convertShowtimesToHalls(data) {
+    key: "setTakenPlaces",
+    value: function setTakenPlaces(showtime, tickets) {
+      var _this4 = this;
+
+      var places = showtime.hall.places; // Filtering tickets on chosen date
+
+      tickets = tickets.filter(function (ticket) {
+        return new Date(ticket.date).toLocaleDateString() === _this4.state.date.toLocaleDateString() && ticket.showtime_id === showtime.id;
+      }); // Get all places of all tickets
+
+      var ticketPlaces = [].concat.apply([], tickets.map(function (ticket) {
+        return ticket.places.map(function (place) {
+          return place.place_id;
+        });
+      })); // Setting "Taken" status to places on matrix
+
+      places.forEach(function (place) {
+        if (ticketPlaces.find(function (ticketPlace) {
+          return ticketPlace === place.id;
+        })) {
+          place.type = 3;
+        }
+      }); // Setting place matrix with taken places to showtime
+
+      showtime.hall.places = places;
+      return showtime;
+    }
+    /**
+     * Assigns halls to movies shown in them
+     * @param {Array} data
+     * @return {Array} data
+     */
+
+  }, {
+    key: "convertMoviesToHalls",
+    value: function convertMoviesToHalls(data) {
       data.forEach(function (movie) {
         movie.halls = {};
         movie.showtimes.forEach(function (st) {
@@ -61051,6 +61151,10 @@ function (_Component) {
       });
       return data;
     }
+    /**
+     * Gets the total sum of chosen places prices
+     */
+
   }, {
     key: "countPrice",
     value: function countPrice() {
@@ -61058,12 +61162,29 @@ function (_Component) {
         return total + parseInt(p.price);
       }, 0);
     }
+    /**
+     * Converts places object to string for print on ticket
+     */
+
   }, {
     key: "stringifyPlaces",
     value: function stringifyPlaces() {
       return Object.values(this.state.places).map(function (p) {
         return "\u0420\u044F\u0434 ".concat(p.row, ", \u043C\u0435\u0441\u0442\u043E ").concat(p.number);
       }).join('; ');
+    } // ====== Events ======
+
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this5 = this;
+
+      console.log('Client mounted');
+      this.getMovieList().then(function (json) {
+        _this5.setState({
+          movieData: _this5.convertMoviesToHalls(json)
+        });
+      });
     }
   }, {
     key: "render",
@@ -61153,7 +61274,17 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/** 
+  * Place types
+  * @constant
+  * @type {Array}
+  * @default
+*/
+
 var TYPES = ['disabled', 'standart', 'vip', 'taken'];
+/**
+ * Client hall page (step 1) component
+ */
 
 var ClientHall =
 /*#__PURE__*/
@@ -61168,29 +61299,30 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ClientHall).call(this, props));
     _this.state = {
       date: _this.props.date,
+      // Chosen date
       showtime: _this.props.showtime,
-      prices: _this.getPrices()
+      // Chosen showtime
+      prices: _this.getPrices() // Object {placeType : price}
+
     };
     return _this;
-  }
+  } // ====== Primary methods =====
+
+  /**
+   * Convert places object to JSX
+   * @return {Array} result
+   */
+
 
   _createClass(ClientHall, [{
-    key: "getPrices",
-    value: function getPrices() {
-      var result = {};
-      this.props.showtime.hall.prices.forEach(function (p) {
-        result[p.type] = p.price;
-      });
-      return result;
-    }
-  }, {
     key: "buildScheme",
     value: function buildScheme() {
       var _this2 = this;
 
       var places = this.state.showtime.hall.places;
       var rows = [];
-      var result = [];
+      var result = []; // Convert place array to matrix
+
       places.forEach(function (place) {
         (rows[place.row_number] || (rows[place.row_number] = [])).push(place);
       });
@@ -61208,13 +61340,27 @@ function (_Component) {
             "data-price": _this2.state.prices[place.type],
             title: "\u0420\u044F\u0434 ".concat(place.row_number + 1, ", \u043C\u0435\u0441\u0442\u043E ").concat(place.number + 1),
             onClick: place.type ? _this2.props.handlePlaceToggle : null
-          }) // @ TODO: при заполнении базы сразу сделать нумерацию рядов и мест с 1!!!
-          );
+          }));
         });
         result.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: rowIndex,
           className: "buying-scheme__row"
         }, row));
+      });
+      return result;
+    } // ====== Helpers ======
+
+    /**
+     * Gets object {placeType : price} from chosen hall prices
+     * @return {Object} result
+     */
+
+  }, {
+    key: "getPrices",
+    value: function getPrices() {
+      var result = {};
+      this.props.showtime.hall.prices.forEach(function (p) {
+        result[p.type] = p.price;
       });
       return result;
     }
@@ -61322,6 +61468,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Clent component date navigation panel
+ */
 
 var ClientNav =
 /*#__PURE__*/
@@ -61337,6 +61486,11 @@ function (_Component) {
     _this.buildDateList = _this.buildDateList.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Builds JSX from dates
+   * @return {Array} result
+   */
+
 
   _createClass(ClientNav, [{
     key: "buildDateList",
@@ -61425,6 +61579,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/**
+ * Client payment page (step 2) component
+ */
 
 var ClientPayment =
 /*#__PURE__*/
@@ -61439,7 +61596,9 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ClientPayment).call(this, props));
     _this.state = {
       places: _this.props.places,
-      showtime: _this.props.showtime
+      // Chosen places
+      showtime: _this.props.showtime // Chosen showtime
+
     };
     return _this;
   }
@@ -61538,6 +61697,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Client showtime list (on main client page) component
+ */
 
 var ClientShowtimeList =
 /*#__PURE__*/
@@ -61550,12 +61712,14 @@ function (_Component) {
     _classCallCheck(this, ClientShowtimeList);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ClientShowtimeList).call(this, props));
-    _this.state = {
-      'showtime': _this.props.showtime
-    };
     _this.buildMovieList = _this.buildMovieList.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Convert movies object to JSX
+   * @return {Array} result
+   */
+
 
   _createClass(ClientShowtimeList, [{
     key: "buildMovieList",
@@ -61566,17 +61730,18 @@ function (_Component) {
 
       if (!this.props.data) {
         return null;
-      }
+      } // Loop througn movie
+
 
       this.props.data.forEach(function (movie) {
-        var halls = [];
+        var halls = []; // Loop througn halls of movie
+
         Object.entries(movie.halls).forEach(function (hall) {
           var sts = [];
 
           var _hall = _slicedToArray(hall, 2),
               title = _hall[0],
-              showtimes = _hall[1]; // console.log(key, hall);
-
+              showtimes = _hall[1];
 
           showtimes.forEach(function (st) {
             var dt = new Date(st.start_time);
@@ -61687,6 +61852,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/**
+ * Client ticket page (step 3) component
+ */
 
 var ClientTicket =
 /*#__PURE__*/
@@ -61700,8 +61868,8 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ClientTicket).call(this, props));
     _this.state = {
-      places: _this.props.places,
-      showtime: _this.props.showtime
+      showtime: _this.props.showtime // Chosen showtime
+
     };
     return _this;
   }
@@ -61785,6 +61953,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
+/**
+ * Hall adding form
+ */
 
 var HallAddForm =
 /*#__PURE__*/
@@ -61800,6 +61971,11 @@ function (_Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Handle form submit
+   * @param {Event} e
+   */
+
 
   _createClass(HallAddForm, [{
     key: "handleSubmit",
@@ -61812,7 +61988,10 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: formData
-      }).then();
+      }).then(function () {
+        return document.location.reload();
+      } // Don't know how to rerender the Hall list only :-(
+      );
       this.props.handler();
     }
   }, {
@@ -61883,6 +62062,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Hall adding popup on admin page
+ */
 
 var HallAddPopup =
 /*#__PURE__*/
@@ -61896,11 +62078,17 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(HallAddPopup).call(this, props));
     _this.state = {
-      active: _this.props.active
+      active: _this.props.active // Popup show status
+
     };
     _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Popup close handling
+   * @param {Event} e
+   */
+
 
   _createClass(HallAddPopup, [{
     key: "close",
@@ -62000,12 +62188,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
-
-function matrix(rows, cols, value) {
-  return Array(parseInt(rows)).fill(0).map(function (x) {
-    return Array(parseInt(cols)).fill(value);
-  });
-}
+/**
+ * Admin hall configuration block component
+ */
 
 var HallConfigurationBlock =
 /*#__PURE__*/
@@ -62020,52 +62205,28 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(HallConfigurationBlock).call(this, props));
     _this.state = {
       halls: _this.props.data,
+      // Halls list
       selectedHall: null,
+      // Selected hall
       selectedHallRows: null,
-      selectedHallPlaces: null
+      // Selected hall rows count
+      selectedHallPlaces: null // Selected hall columns count
+
     };
     _this.handleHallSelect = _this.handleHallSelect.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleHallRowsChange = _this.handleHallRowsChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleHallPlacesChange = _this.handleHallPlacesChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
-  } // @ TODO: общий класс, с этим методом
+  } // ====== Primary methods =====
+
+  /**
+   * Convert halls object to JSX
+   * @param {Event} e
+   */
 
 
   _createClass(HallConfigurationBlock, [{
-    key: "handleHallSelect",
-    value: function handleHallSelect(el, e) {
-      this.setState({
-        selectedHall: el,
-        selectedHallRows: el.rows || null,
-        selectedHallPlaces: el.places_in_row || null // selectedHallPlaceMatrix: null
-
-      });
-      this.forceUpdate();
-    }
-  }, {
-    key: "handleHallRowsChange",
-    value: function handleHallRowsChange(e) {
-      this.setState({
-        selectedHallRows: e.target.value
-      });
-    }
-  }, {
-    key: "handleHallPlacesChange",
-    value: function handleHallPlacesChange(e) {
-      this.setState({
-        selectedHallPlaces: e.target.value
-      });
-    }
-  }, {
-    key: "handleCancel",
-    value: function handleCancel() {
-      this.setState({
-        selectedHallRows: null,
-        selectedHallPlaces: null
-      });
-    }
-  }, {
     key: "buildHallList",
     value: function buildHallList() {
       var _this2 = this;
@@ -62091,12 +62252,86 @@ function (_Component) {
         }, el.title)));
       });
       return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
+    } // ====== Handlers ======
+
+    /**
+     * Hall radio click
+     * @param {Object} el
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleHallSelect",
+    value: function handleHallSelect(el, e) {
+      this.setState({
+        selectedHall: el,
+        selectedHallRows: el.rows || null,
+        selectedHallPlaces: el.places_in_row || null
+      });
+      this.forceUpdate();
     }
+    /**
+     * Hall rows input change
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleHallRowsChange",
+    value: function handleHallRowsChange(e) {
+      this.setState({
+        selectedHallRows: e.target.value
+      });
+    }
+    /**
+     * Hall places in row input change
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleHallPlacesChange",
+    value: function handleHallPlacesChange(e) {
+      this.setState({
+        selectedHallPlaces: e.target.value
+      });
+    }
+    /**
+     * Hall cancel button click
+     */
+
+  }, {
+    key: "handleCancel",
+    value: function handleCancel() {
+      this.setState({
+        selectedHallRows: null,
+        selectedHallPlaces: null
+      });
+    } // ====== Helpers ======
+
+    /**
+     * Make matrix of {value} with dimensions {rows}x{cols}
+     * @param {number} rows
+     * @param {number} cols
+     * @param {number} value
+     */
+
+  }, {
+    key: "matrix",
+    value: function matrix(rows, cols, value) {
+      return Array(parseInt(rows)).fill(0).map(function (x) {
+        return Array(parseInt(cols)).fill(value);
+      });
+    }
+    /**
+      * Make matrix with place types set
+      * @param {number} rows
+      * @param {number} cols
+      */
+
   }, {
     key: "setPlaceMatrix",
-    value: function setPlaceMatrix(rows, p) {
+    value: function setPlaceMatrix(rows, cols) {
       var places = this.state.selectedHall.places;
-      var placeMatrix = matrix(rows, p, 1);
+      var placeMatrix = this.matrix(rows, cols, 1);
 
       if (places) {
         places.forEach(function (place) {
@@ -62110,9 +62345,10 @@ function (_Component) {
     key: "render",
     value: function render() {
       var hallRows = null;
-      var hallScheme = null; // @TODO: Это работает только если пустой зал
+      var hallScheme = null;
 
       if (this.state.selectedHall) {
+        // Show hall inputs only if hall chosen
         hallRows = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallRows__WEBPACK_IMPORTED_MODULE_3__["default"], {
           rows: this.state.selectedHallRows || '',
           places: this.state.selectedHallPlaces || '',
@@ -62122,6 +62358,7 @@ function (_Component) {
       }
 
       if (this.state.selectedHallRows && this.state.selectedHallPlaces) {
+        // Show hall scheme only if hall inputs have values
         hallScheme = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallScheme__WEBPACK_IMPORTED_MODULE_2__["default"], {
           hall: this.state.selectedHall,
           rows: this.state.selectedHallRows,
@@ -62175,6 +62412,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
+/**
+ * Hall deleting form
+ */
 
 var HallDeleteForm =
 /*#__PURE__*/
@@ -62190,6 +62430,11 @@ function (_Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Handle form submit
+   * @param {Event} e
+   */
+
 
   _createClass(HallDeleteForm, [{
     key: "handleSubmit",
@@ -62206,7 +62451,6 @@ function (_Component) {
       }).then(function () {
         return document.location.reload();
       });
-      this.props.handler();
     }
   }, {
     key: "render",
@@ -62275,6 +62519,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Hall deleting popup on admin page
+ */
 
 var HallAddPopup =
 /*#__PURE__*/
@@ -62288,11 +62535,17 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(HallAddPopup).call(this, props));
     _this.state = {
-      active: _this.props.active
+      active: _this.props.active // Popup show status
+
     };
     _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Popup close handling
+   * @param {Event} e
+   */
+
 
   _createClass(HallAddPopup, [{
     key: "close",
@@ -62393,6 +62646,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Admin hall management block component
+ */
 
 var HallManagementBlock =
 /*#__PURE__*/
@@ -62407,43 +62663,25 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(HallManagementBlock).call(this, props));
     _this.state = {
       createPopupOn: false,
+      // Create popup show status
       deletePopupOn: false,
+      // Delete popup show status
       data: null,
-      deleteId: null
+      // Halls list
+      deleteId: null // Deleted hall id
+
     };
     _this.handleCreateClick = _this.handleCreateClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDeleteClick = _this.handleDeleteClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Convert hall list to JSX
+   * @return {Array} result
+   */
+
 
   _createClass(HallManagementBlock, [{
-    key: "handleCreateClick",
-    value: function handleCreateClick() {
-      this.setState({
-        createPopupOn: true
-      });
-    }
-  }, {
-    key: "handleDeleteClick",
-    value: function handleDeleteClick(el, e) {
-      this.setState({
-        deletePopupOn: true,
-        deletedHall: el
-      });
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      if (document.getElementById('popups')) {
-        react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallAddPopup__WEBPACK_IMPORTED_MODULE_2__["default"], {
-          active: this.state.createPopupOn
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallDeletePopup__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          active: this.state.deletePopupOn,
-          deletedHall: this.state.deletedHall
-        })), document.getElementById('popups'));
-      }
-    }
-  }, {
     key: "buildHallList",
     value: function buildHallList() {
       var _this2 = this;
@@ -62464,6 +62702,42 @@ function (_Component) {
         })));
       });
       return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
+    }
+    /**
+     * Handle create button click
+     */
+
+  }, {
+    key: "handleCreateClick",
+    value: function handleCreateClick() {
+      this.setState({
+        createPopupOn: true
+      });
+    }
+    /**
+     * Handle delete button click
+     */
+
+  }, {
+    key: "handleDeleteClick",
+    value: function handleDeleteClick(el, e) {
+      this.setState({
+        deletePopupOn: true,
+        deletedHall: el
+      });
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      if (document.getElementById('popups')) {
+        // After updating add popups to page
+        react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallAddPopup__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          active: this.state.createPopupOn
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallDeletePopup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          active: this.state.deletePopupOn,
+          deletedHall: this.state.deletedHall
+        })), document.getElementById('popups'));
+      }
     }
   }, {
     key: "render",
@@ -64028,7 +64302,7 @@ function (_Component) {
   function ShowtimeAddForm(props) {
     _classCallCheck(this, ShowtimeAddForm);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeAddForm).call(this, props)); // this.handleSubmit = this.handleSubmit.bind(this);
+    return _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeAddForm).call(this, props));
   }
 
   _createClass(ShowtimeAddForm, [{

@@ -5,18 +5,27 @@ import HallConfigurationBlock from './HallConfigurationBlock';
 import HallPriceBlock from './HallPriceBlock';
 import MovieManagementBlock from './MovieManagementBlock';
 
-
+/**
+ * Main admin component
+ */
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: null,
-      movieData: null,
+      halls:     null, 
+      movies:    null,
       showtimes: null,
     }
   }
 
+
+  // ====== Primary methods =====
+
+  /**
+   * Get hall list from db
+   * @return {Promise}
+   */
   getHallList() {
     return fetch('/halls/list',{
       method: "POST",
@@ -28,6 +37,10 @@ class App extends Component {
     );
   }
 
+  /**
+   * Get movie list from db
+   * @return {Promise}
+   */
   getMovieList() {
     return fetch('/movies/list',{
       method: "POST",
@@ -39,7 +52,10 @@ class App extends Component {
     ); 
   }
 
-
+  /**
+   * Get showtime list from db
+   * @return {Promise}
+   */
   getShowtimeList() {
     return fetch('/showtimes/list',{
       method: "POST",
@@ -51,6 +67,15 @@ class App extends Component {
     ); 
   }
 
+
+
+  // ====== Helpers =====
+
+  /**
+   * Convert showtimes array to synthetic data structure, used in Movie Management Block
+   * @param {data} data
+   * @return {Object} result
+   */
   showtimesToMatrix(data) {
     let result = {};
 
@@ -74,20 +99,27 @@ class App extends Component {
     return result;
   }
 
+
+  // ====== Events ======
+
   componentDidMount() {
     console.log('App mounted');
+
+    /**
+     * After mounting set halls, movies and showtimes tio state
+     */
 
     this.getHallList()
       .then(json => {
         this.setState(
-          {data : json
+          {halls : json
         });
       });
 
     this.getMovieList()
       .then(json => {
         this.setState(
-          {movieData : json
+          {movies : json
         });
       });      
 
@@ -108,7 +140,7 @@ class App extends Component {
           <h2 className="conf-step__title">Управление залами</h2>
         </header>
 
-        <HallManagementBlock data={this.state.data} />
+        <HallManagementBlock data={this.state.halls} />
         
       </section>
       <section className="conf-step">
@@ -118,7 +150,7 @@ class App extends Component {
         <div className="conf-step__wrapper">
           <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
 
-          <HallConfigurationBlock data={this.state.data} />
+          <HallConfigurationBlock data={this.state.halls} />
 
         </div>    
       </section>
@@ -129,7 +161,7 @@ class App extends Component {
         <div className="conf-step__wrapper">
           <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
 
-          <HallPriceBlock data={this.state.data} />    
+          <HallPriceBlock data={this.state.halls} />    
           
         </div>
       </section>
@@ -140,7 +172,7 @@ class App extends Component {
         </header>
         <div className="conf-step__wrapper">
           
-          <MovieManagementBlock data={this.state.data} movieData={this.state.movieData} showtimes={this.state.showtimes} />  
+          <MovieManagementBlock data={this.state.halls} movieData={this.state.movies} showtimes={this.state.showtimes} />  
         </div>
       </section>            
 

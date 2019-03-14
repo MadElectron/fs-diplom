@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+ * Client ticket page (step 3) component
+ */
 export default class ClientTicket extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      places: this.props.places,
-      showtime: this.props.showtime,
+      showtime: this.props.showtime,  // Chosen showtime
     }
   }
 

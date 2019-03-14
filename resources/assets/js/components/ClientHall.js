@@ -1,35 +1,41 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/** 
+  * Place types
+  * @constant
+  * @type {Array}
+  * @default
+*/
 const TYPES = ['disabled', 'standart', 'vip', 'taken'];
 
-export default class ClientHall extends Component {
 
+/**
+ * Client hall page (step 1) component
+ */
+export default class ClientHall extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        date: this.props.date,
-        showtime: this.props.showtime,
-        prices: this.getPrices()
+        date:     this.props.date,      // Chosen date
+        showtime: this.props.showtime,  // Chosen showtime
+        prices:   this.getPrices()      // Object {placeType : price}
     }
   }
 
-  getPrices() {
-    let result = {};
+  // ====== Primary methods =====
 
-    this.props.showtime.hall.prices.forEach(p => {
-      result[p.type] = p.price;
-    });
-
-    return result;
-  }
-
+  /**
+   * Convert places object to JSX
+   * @return {Array} result
+   */
   buildScheme() {
     let places = this.state.showtime.hall.places;
     let rows = [];
     let result = [];
 
+    // Convert place array to matrix
     places.forEach(place => {
       (rows[place.row_number] || (rows[place.row_number] = [])).push(place)
     });
@@ -52,7 +58,6 @@ export default class ClientHall extends Component {
             title={`Ряд ${place.row_number + 1}, место ${place.number + 1}`}
             onClick={place.type ? this.props.handlePlaceToggle : null}
           ></span>
-          // @ TODO: при заполнении базы сразу сделать нумерацию рядов и мест с 1!!!
         );
       });
 
@@ -65,6 +70,24 @@ export default class ClientHall extends Component {
 
     return result;
   }
+
+
+  // ====== Helpers ======
+
+  /**
+   * Gets object {placeType : price} from chosen hall prices
+   * @return {Object} result
+   */
+  getPrices() {
+    let result = {};
+
+    this.props.showtime.hall.prices.forEach(p => {
+      result[p.type] = p.price;
+    });
+
+    return result;
+  }
+
 
   render() {
     const date = this.state.date.toLocaleString('ru-RU', {day: 'numeric', month: 'long'});

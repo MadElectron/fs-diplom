@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+ * Client payment page (step 2) component
+ */
 export default class ClientPayment extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      places: this.props.places,
-      showtime: this.props.showtime,
+      places: this.props.places,      // Chosen places
+      showtime: this.props.showtime,  // Chosen showtime
     }
   }
 

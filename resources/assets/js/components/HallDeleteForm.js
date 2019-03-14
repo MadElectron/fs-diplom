@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+
+/**
+ * Hall deleting form
+ */
 export default class HallDeleteForm extends Component {
     constructor(props) {
       super(props);
@@ -7,6 +11,11 @@ export default class HallDeleteForm extends Component {
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+
+    /**
+     * Handle form submit
+     * @param {Event} e
+     */
     handleSubmit(e) {
       e.preventDefault();
 
@@ -22,8 +31,6 @@ export default class HallDeleteForm extends Component {
       }).then(
         () => document.location.reload()
       );
-
-      this.props.handler();
     }
 
     render() {

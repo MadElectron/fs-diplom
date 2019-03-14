@@ -4,19 +4,18 @@ import HallScheme from './HallScheme';
 import HallRows from './HallRows';
 
 
-function matrix(rows, cols, value) {
-  return Array(parseInt(rows)).fill(0).map(x => Array(parseInt(cols)).fill(value));
-}
-
+/**
+ * Admin hall configuration block component
+ */
 export default class HallConfigurationBlock extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      halls: this.props.data,
-      selectedHall: null,
-      selectedHallRows: null,
-      selectedHallPlaces: null,
+      halls:              this.props.data,   // Halls list
+      selectedHall:       null,              // Selected hall
+      selectedHallRows:   null,              // Selected hall rows count
+      selectedHallPlaces: null,              // Selected hall columns count
     };
 
     this.handleHallSelect = this.handleHallSelect.bind(this);
@@ -25,37 +24,14 @@ export default class HallConfigurationBlock extends Component {
     this.handleCancel = this.handleCancel.bind(this);
   }
 
-  // @ TODO: общий класс, с этим методом
-  handleHallSelect(el, e) {
-    this.setState({
-      selectedHall: el,
-      selectedHallRows: el.rows || null,
-      selectedHallPlaces: el.places_in_row || null,
-      // selectedHallPlaceMatrix: null
-    });            
 
-    this.forceUpdate();
-  }
 
-  handleHallRowsChange(e) {
-    this.setState({
-      selectedHallRows: e.target.value,
-    });            
-  }  
+  // ====== Primary methods =====
 
-  handleHallPlacesChange(e) {
-    this.setState({
-      selectedHallPlaces: e.target.value,
-    });            
-  }  
-
-  handleCancel() {
-    this.setState({
-      selectedHallRows: null,
-      selectedHallPlaces: null,
-    });
-  }
-
+  /**
+   * Convert halls object to JSX
+   * @param {Event} e
+   */
   buildHallList() {
     if (!this.props.data) {
       return null;
@@ -78,9 +54,79 @@ export default class HallConfigurationBlock extends Component {
     return result.length ? result : <p>Нет доступных залов</p>;
   }
 
-  setPlaceMatrix(rows, p) {
+
+  // ====== Handlers ======
+
+
+  /**
+   * Hall radio click
+   * @param {Object} el
+   * @param {Event} e
+   */
+  handleHallSelect(el, e) {
+    this.setState({
+      selectedHall: el,
+      selectedHallRows: el.rows || null,
+      selectedHallPlaces: el.places_in_row || null,
+    });            
+
+    this.forceUpdate();
+  }
+
+
+  /**
+   * Hall rows input change
+   * @param {Event} e
+   */
+  handleHallRowsChange(e) {
+    this.setState({
+      selectedHallRows: e.target.value,
+    });            
+  }  
+
+
+  /**
+   * Hall places in row input change
+   * @param {Event} e
+   */
+  handleHallPlacesChange(e) {
+    this.setState({
+      selectedHallPlaces: e.target.value,
+    });            
+  }  
+
+
+  /**
+   * Hall cancel button click
+   */
+  handleCancel() {
+    this.setState({
+      selectedHallRows: null,
+      selectedHallPlaces: null,
+    });
+  }
+
+
+  // ====== Helpers ======
+
+  /**
+   * Make matrix of {value} with dimensions {rows}x{cols}
+   * @param {number} rows
+   * @param {number} cols
+   * @param {number} value
+   */
+  matrix(rows, cols, value) {
+    return Array(parseInt(rows)).fill(0).map(x => Array(parseInt(cols)).fill(value));
+  }
+
+ /**
+   * Make matrix with place types set
+   * @param {number} rows
+   * @param {number} cols
+   */
+  setPlaceMatrix(rows, cols) {
     let places = this.state.selectedHall.places;
-    let placeMatrix = matrix(rows, p, 1);
+    let placeMatrix = this.matrix(rows, cols, 1);
 
     if (places) {
       places.forEach(place => {
@@ -92,12 +138,15 @@ export default class HallConfigurationBlock extends Component {
     return placeMatrix;
   }
 
+
+
   render() {
     let hallRows = null;
     let hallScheme = null;
 
-    // @TODO: Это работает только если пустой зал
     if (this.state.selectedHall) {
+      // Show hall inputs only if hall chosen
+
       hallRows = <HallRows 
         rows={this.state.selectedHallRows || ''} 
         places={this.state.selectedHallPlaces || ''}       
@@ -107,7 +156,7 @@ export default class HallConfigurationBlock extends Component {
     }
 
     if (this.state.selectedHallRows && this.state.selectedHallPlaces) {
-
+      // Show hall scheme only if hall inputs have values
 
       hallScheme = <HallScheme 
         hall={this.state.selectedHall}

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * Hall adding form
+ */
 export default class HallAddForm extends Component {
     constructor(props) {
       super(props);
@@ -7,6 +10,11 @@ export default class HallAddForm extends Component {
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+
+  /**
+   * Handle form submit
+   * @param {Event} e
+   */
     handleSubmit(e) {
       e.preventDefault();
 
@@ -19,7 +27,7 @@ export default class HallAddForm extends Component {
         },
         body: formData
       }).then(
-        // () => document.location.reload() // Don't know how to rerender the Hall list only :-(
+        () => document.location.reload() // Don't know how to rerender the Hall list only :-(
       );
 
       this.props.handler();

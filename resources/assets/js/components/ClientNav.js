@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+ * Clent component date navigation panel
+ */
 export default class ClientNav extends Component {
-    
     constructor(props) {
       super(props);
 
       this.buildDateList = this.buildDateList.bind(this);
     }
 
-
+  /**
+   * Builds JSX from dates
+   * @return {Array} result
+   */
     buildDateList() {
       if (!this.props.date) {
         return null;
@@ -46,8 +51,6 @@ export default class ClientNav extends Component {
       return (
           <nav className="page-nav">
             {this.buildDateList()}
-
-         
             <a className="page-nav__day page-nav__day_next" href="#">
             </a>
           </nav>

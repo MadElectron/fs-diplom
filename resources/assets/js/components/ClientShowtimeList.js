@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+ * Client showtime list (on main client page) component
+ */
 export default class ClientShowtimeList extends Component {
     constructor(props) {
       super(props);
 
-      this.state = {
-        'showtime' : this.props.showtime
-      }
-
       this.buildMovieList = this.buildMovieList.bind(this);
     }
 
+
+    /**
+     * Convert movies object to JSX
+     * @return {Array} result
+     */
     buildMovieList() {
 
       const result = [];
@@ -20,15 +24,15 @@ export default class ClientShowtimeList extends Component {
         return null;
       }
 
+      // Loop througn movie
       this.props.data.forEach(movie => {
         const halls = [];
 
+        // Loop througn halls of movie
         Object.entries(movie.halls).forEach(hall => {
           
           const sts = [];
           let [title, showtimes] = hall;
-
-          // console.log(key, hall);
 
           showtimes.forEach(st => {
             let dt = new Date(st.start_time);
@@ -77,7 +81,6 @@ export default class ClientShowtimeList extends Component {
 
       return result;
     }
-
 
 
     render() {

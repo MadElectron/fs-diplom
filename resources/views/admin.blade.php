@@ -8,8 +8,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   <title>ИдёмВКино</title>
-  <!-- <link rel="stylesheet" href="CSS/normalize.css"> -->
-
   <link rel="stylesheet" href="{{mix('css/app.css')}}" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
 </head>
