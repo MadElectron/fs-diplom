@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * Movie adding form
+ */
 export default class MovieAddForm extends Component {
     constructor(props) {
       super(props);
@@ -7,24 +10,9 @@ export default class MovieAddForm extends Component {
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e) {
-      e.preventDefault();
-
-      const formData = new FormData(e.target);
-
-      fetch('/movies/add',{
-        method: "POST",
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        },
-        body: formData
-      }).then(
-        () => document.location.reload()
-      );
-
-      this.props.handler();
-    }
-
+    /**
+     * Preview uploaded image file
+     */
     previewFile() {
       let preview = document.getElementById('preview');
       let file    = document.querySelector('input[name="image"]').files[0];
@@ -40,6 +28,28 @@ export default class MovieAddForm extends Component {
           preview.src = "";
       }      
     }
+
+
+    /**
+     * Handle form submit
+     * @param {Event} e
+     */
+    handleSubmit(e) {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+
+      fetch('/movies/add',{
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: formData
+      }).then(
+        () => document.location.reload()
+      );
+    }
+
 
     render() {
       return (

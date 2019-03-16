@@ -7,6 +7,9 @@ export default class ShowtimeDeleteForm extends Component {
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Handle form submit
+     */
     handleSubmit(e) {
       e.preventDefault();
 

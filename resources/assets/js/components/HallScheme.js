@@ -1,36 +1,55 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/** 
+  * Place types
+  * @constant
+  * @type {Array}
+  * @default
+*/
 const TYPES = ['disabled', 'standart', 'vip'];
 
+/**
+ * Admin hall scheme block component
+ */
 export default class HallScheme extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      hall: this.props.hall,
-      rows: this.props.rows,
-      places: this.props.places,
-      placeMatrix: this.props.placeMatrix
+      hall: this.props.hall,                // Selected hall
+      rows: this.props.rows,                // Selected hall rows count
+      places: this.props.places,            // Selected hall places count
+      placeMatrix: this.props.placeMatrix   // Selected hall place matrix
     };
 
     this.changeType = this.changeType.bind(this);
     this.handleSave = this.handleSave.bind(this);
   }
 
+
+
+  // ====== Primary methods =====
+
+  /**
+   * Change place type
+   * @param {Event} e
+   */
   changeType(e) {
 
     const [row, place] = e.target.getAttribute('data-key').split('_').map(x => parseInt(x));
     const placeMatrix = this.state.placeMatrix;
     
     let type = parseInt(e.target.getAttribute('data-type'))
-    const newType = ++type % 3;
+    const newType = ++type % 3;   // Cycling types
 
     placeMatrix[row][place] = newType;
 
     this.setState({
       placeMatrix: placeMatrix
     });
+
+    // Setting selected type to place DOM Node
 
     TYPES.forEach( c =>
       e.target.classList.remove(`conf-step__chair_${c}`)
@@ -40,6 +59,10 @@ export default class HallScheme extends Component {
     e.target.setAttribute('data-type', newType);
   }
 
+
+  /**
+   * Convert places object to JSX
+   */
   buildPlacesScheme() {
     const rows = [];
 
@@ -62,9 +85,14 @@ export default class HallScheme extends Component {
     return rows;
   }
 
-  handleSave() {
-    // console.log('scheme:', this.state);
 
+  // ====== Handlers ======
+
+
+  /**
+   * Hall save button click
+   */
+  handleSave() {
     const hall = this.state.hall;
 
     fetch(`/places/add/${hall.id}`,{
@@ -74,10 +102,12 @@ export default class HallScheme extends Component {
       },
       body: JSON.stringify(this.state.placeMatrix)
     }).then(
-      // resp => console.log(resp);
       () => document.location.reload() // Don't know how to rerender the Hall list only :-(
     );
   }
+
+
+  // ====== Events ======
 
   componentWillReceiveProps(nextProps) {
     this.setState({

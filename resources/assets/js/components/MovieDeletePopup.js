@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import MovieDeleteForm from './MovieDeleteForm';
 
+/**
+ * Movie deleting popup on admin page
+ */
 export default class MovieAddPopup extends Component {
     constructor(props) {
       super(props);
@@ -12,6 +15,10 @@ export default class MovieAddPopup extends Component {
       this.close = this.close.bind(this);
     }
 
+    /**
+     * Popup close handling
+     * @param {Event} e
+     */
     close(e) {
       if (e !== undefined) { // Popup closed manually
         e.preventDefault();

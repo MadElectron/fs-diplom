@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import HallPrices from './HallPrices';
 
-export default class HallConfigurationBlock extends Component {
+/**
+ * Admin prices block component
+ */
+export default class HallPriceBlock extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedHall: null,
-      selectedHallStandartPrice: null,
-      selectedHallVipPrice: null,
+      selectedHall: null,               // Selected Hall
+      selectedHallStandartPrice: null,  // Selected Hall price for standart places
+      selectedHallVipPrice: null,       // Selected Hall price for VIP places
     };
 
    this.handleHallSelect = this.handleHallSelect.bind(this);
@@ -19,52 +22,12 @@ export default class HallConfigurationBlock extends Component {
    this.handleSave = this.handleSave.bind(this);
   }
 
-  handleHallSelect(el, e) {
-    this.setState({
-      selectedHall: el,
-    });            
-  }
+  // ====== Primary methods =====
 
-  handleHallStandartPriceChange(e) {
-    this.setState({
-      selectedHallStandartPrice: e.target.value,
-    });            
-  }  
-
-  handleHallVipPriceChange(e) {
-    this.setState({
-      selectedHallVipPrice: e.target.value,
-    });            
-  }  
-
-  handleCancel() {
-    this.setState({
-      selectedHallStandartPrice: null,
-      selectedHallVipPrice: null,
-    });
-  }
-
-  handleSave() {
-    console.log('prices:', this.state);
-
-    const hall = this.state.selectedHall;
-
-    const data = {
-      0: this.state.selectedHallStandartPrice,
-      1: this.state.selectedHallVipPrice
-    };
-
-    fetch(`/place-type-prices/add/${hall.id}`,{
-      method: "POST",
-      headers: {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-      },
-      body: JSON.stringify(data)
-    }).then(
-      resp => console.log(resp)
-    );
-  }
-
+  /**
+   * Convert halls object to JSX
+   * @param {Event} e
+   */
   buildHallList() {
     if (!this.props.data) {
       return null;
@@ -86,6 +49,78 @@ export default class HallConfigurationBlock extends Component {
 
     return result.length ? result : <p>Нет доступных залов</p>;
   }
+
+
+  // ====== Handlers ======
+
+
+  /**
+   * Hall radio click
+   * @param {Object} el
+   * @param {Event} e
+   */
+  handleHallSelect(el, e) {
+    this.setState({
+      selectedHall: el,
+    });            
+  }
+
+
+  /**
+   * Hall standart price input change
+   * @param {Event} e
+   */
+  handleHallStandartPriceChange(e) {
+    this.setState({
+      selectedHallStandartPrice: e.target.value,
+    });            
+  }  
+
+
+  /**
+   * Hall VIP price input change
+   * @param {Event} e
+   */
+  handleHallVipPriceChange(e) {
+    this.setState({
+      selectedHallVipPrice: e.target.value,
+    });            
+  }  
+
+
+  /**
+   * Hall cancel button click
+   */
+  handleCancel() {
+    this.setState({
+      selectedHallStandartPrice: null,
+      selectedHallVipPrice: null,
+    });
+  }
+
+
+  /**
+   * Hall save button click
+   */
+  handleSave() {
+    const hall = this.state.selectedHall;
+
+    const data = {
+      0: this.state.selectedHallStandartPrice,
+      1: this.state.selectedHallVipPrice
+    };
+
+    fetch(`/place-type-prices/add/${hall.id}`,{
+      method: "POST",
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+      body: JSON.stringify(data)
+    }).then(
+      resp => console.log(resp)
+    );
+  }
+
 
   render() {
     let hallPrices = null;

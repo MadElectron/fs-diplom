@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import ShowtimeDeleteForm from './ShowtimeDeleteForm';
 
-export default class ShowtimeAddPopup extends Component {
+/**
+ * Hall adding popup on admin page
+ */
+export default class ShowtimeDeletePopup extends Component {
     constructor(props) {
       super(props);
 
@@ -12,6 +15,10 @@ export default class ShowtimeAddPopup extends Component {
       this.close = this.close.bind(this);
     }
 
+    /**
+     * Popup close handling
+     * @param {Event} e
+     */
     close(e) {
       if (e !== undefined) { // Popup closed manually
         e.preventDefault();

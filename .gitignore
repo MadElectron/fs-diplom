@@ -13,3 +13,7 @@ npm-debug.log
 yarn-error.log
 .env
 .DS_Store
+
+
+/resources/assets/js/components/HallScheme_context.js
+/resources/assets/js/components/HallScheme_contextmenu.js

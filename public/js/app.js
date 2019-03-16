@@ -62771,7 +62771,7 @@ function (_Component) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallConfigurationBlock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HallPriceBlock; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -62798,22 +62798,28 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Admin prices block component
+ */
 
-var HallConfigurationBlock =
+var HallPriceBlock =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(HallConfigurationBlock, _Component);
+  _inherits(HallPriceBlock, _Component);
 
-  function HallConfigurationBlock(props) {
+  function HallPriceBlock(props) {
     var _this;
 
-    _classCallCheck(this, HallConfigurationBlock);
+    _classCallCheck(this, HallPriceBlock);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(HallConfigurationBlock).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(HallPriceBlock).call(this, props));
     _this.state = {
       selectedHall: null,
+      // Selected Hall
       selectedHallStandartPrice: null,
-      selectedHallVipPrice: null
+      // Selected Hall price for standart places
+      selectedHallVipPrice: null // Selected Hall price for VIP places
+
     };
     _this.handleHallSelect = _this.handleHallSelect.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleHallStandartPriceChange = _this.handleHallStandartPriceChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -62821,57 +62827,15 @@ function (_Component) {
     _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
-  }
+  } // ====== Primary methods =====
 
-  _createClass(HallConfigurationBlock, [{
-    key: "handleHallSelect",
-    value: function handleHallSelect(el, e) {
-      this.setState({
-        selectedHall: el
-      });
-    }
-  }, {
-    key: "handleHallStandartPriceChange",
-    value: function handleHallStandartPriceChange(e) {
-      this.setState({
-        selectedHallStandartPrice: e.target.value
-      });
-    }
-  }, {
-    key: "handleHallVipPriceChange",
-    value: function handleHallVipPriceChange(e) {
-      this.setState({
-        selectedHallVipPrice: e.target.value
-      });
-    }
-  }, {
-    key: "handleCancel",
-    value: function handleCancel() {
-      this.setState({
-        selectedHallStandartPrice: null,
-        selectedHallVipPrice: null
-      });
-    }
-  }, {
-    key: "handleSave",
-    value: function handleSave() {
-      console.log('prices:', this.state);
-      var hall = this.state.selectedHall;
-      var data = {
-        0: this.state.selectedHallStandartPrice,
-        1: this.state.selectedHallVipPrice
-      };
-      fetch("/place-type-prices/add/".concat(hall.id), {
-        method: "POST",
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(data)
-      }).then(function (resp) {
-        return console.log(resp);
-      });
-    }
-  }, {
+  /**
+   * Convert halls object to JSX
+   * @param {Event} e
+   */
+
+
+  _createClass(HallPriceBlock, [{
     key: "buildHallList",
     value: function buildHallList() {
       var _this2 = this;
@@ -62897,6 +62861,78 @@ function (_Component) {
         }, el.title)));
       });
       return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
+    } // ====== Handlers ======
+
+    /**
+     * Hall radio click
+     * @param {Object} el
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleHallSelect",
+    value: function handleHallSelect(el, e) {
+      this.setState({
+        selectedHall: el
+      });
+    }
+    /**
+     * Hall standart price input change
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleHallStandartPriceChange",
+    value: function handleHallStandartPriceChange(e) {
+      this.setState({
+        selectedHallStandartPrice: e.target.value
+      });
+    }
+    /**
+     * Hall VIP price input change
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleHallVipPriceChange",
+    value: function handleHallVipPriceChange(e) {
+      this.setState({
+        selectedHallVipPrice: e.target.value
+      });
+    }
+    /**
+     * Hall cancel button click
+     */
+
+  }, {
+    key: "handleCancel",
+    value: function handleCancel() {
+      this.setState({
+        selectedHallStandartPrice: null,
+        selectedHallVipPrice: null
+      });
+    }
+    /**
+     * Hall save button click
+     */
+
+  }, {
+    key: "handleSave",
+    value: function handleSave() {
+      var hall = this.state.selectedHall;
+      var data = {
+        0: this.state.selectedHallStandartPrice,
+        1: this.state.selectedHallVipPrice
+      };
+      fetch("/place-type-prices/add/".concat(hall.id), {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(data)
+      }).then(function (resp) {
+        return console.log(resp);
+      });
     }
   }, {
     key: "render",
@@ -62934,7 +62970,7 @@ function (_Component) {
     }
   }]);
 
-  return HallConfigurationBlock;
+  return HallPriceBlock;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
@@ -62975,6 +63011,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/**
+ * Admin prices inputs
+ */
 
 var HallPrices =
 /*#__PURE__*/
@@ -63059,6 +63098,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/**
+ * Admin hall rows inputs
+ */
 
 var HallRows =
 /*#__PURE__*/
@@ -63151,7 +63193,17 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/** 
+  * Place types
+  * @constant
+  * @type {Array}
+  * @default
+*/
+
 var TYPES = ['disabled', 'standart', 'vip'];
+/**
+ * Admin hall scheme block component
+ */
 
 var HallScheme =
 /*#__PURE__*/
@@ -63166,14 +63218,24 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(HallScheme).call(this, props));
     _this.state = {
       hall: _this.props.hall,
+      // Selected hall
       rows: _this.props.rows,
+      // Selected hall rows count
       places: _this.props.places,
-      placeMatrix: _this.props.placeMatrix
+      // Selected hall places count
+      placeMatrix: _this.props.placeMatrix // Selected hall place matrix
+
     };
     _this.changeType = _this.changeType.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
-  }
+  } // ====== Primary methods =====
+
+  /**
+   * Change place type
+   * @param {Event} e
+   */
+
 
   _createClass(HallScheme, [{
     key: "changeType",
@@ -63187,17 +63249,23 @@ function (_Component) {
 
       var placeMatrix = this.state.placeMatrix;
       var type = parseInt(e.target.getAttribute('data-type'));
-      var newType = ++type % 3;
+      var newType = ++type % 3; // Cycling types
+
       placeMatrix[row][place] = newType;
       this.setState({
         placeMatrix: placeMatrix
-      });
+      }); // Setting selected type to place DOM Node
+
       TYPES.forEach(function (c) {
         return e.target.classList.remove("conf-step__chair_".concat(c));
       });
       e.target.classList.add("conf-step__chair_".concat(TYPES[newType]));
       e.target.setAttribute('data-type', newType);
     }
+    /**
+     * Convert places object to JSX
+     */
+
   }, {
     key: "buildPlacesScheme",
     value: function buildPlacesScheme() {
@@ -63223,11 +63291,15 @@ function (_Component) {
       }
 
       return rows;
-    }
+    } // ====== Handlers ======
+
+    /**
+     * Hall save button click
+     */
+
   }, {
     key: "handleSave",
     value: function handleSave() {
-      // console.log('scheme:', this.state);
       var hall = this.state.hall;
       fetch("/places/add/".concat(hall.id), {
         method: "POST",
@@ -63235,12 +63307,12 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(this.state.placeMatrix)
-      }).then( // resp => console.log(resp);
-      function () {
+      }).then(function () {
         return document.location.reload();
       } // Don't know how to rerender the Hall list only :-(
       );
-    }
+    } // ====== Events ======
+
   }, {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
@@ -63339,6 +63411,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
+/**
+ * Movie adding form
+ */
 
 var MovieAddForm =
 /*#__PURE__*/
@@ -63354,24 +63429,12 @@ function (_Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Preview uploaded image file
+   */
+
 
   _createClass(MovieAddForm, [{
-    key: "handleSubmit",
-    value: function handleSubmit(e) {
-      e.preventDefault();
-      var formData = new FormData(e.target);
-      fetch('/movies/add', {
-        method: "POST",
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: formData
-      }).then(function () {
-        return document.location.reload();
-      });
-      this.props.handler();
-    }
-  }, {
     key: "previewFile",
     value: function previewFile() {
       var preview = document.getElementById('preview');
@@ -63387,6 +63450,26 @@ function (_Component) {
       } else {
         preview.src = "";
       }
+    }
+    /**
+     * Handle form submit
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      var formData = new FormData(e.target);
+      fetch('/movies/add', {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+      }).then(function () {
+        return document.location.reload();
+      });
     }
   }, {
     key: "render",
@@ -63498,6 +63581,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Movie adding popup on admin page
+ */
 
 var MovieAddPopup =
 /*#__PURE__*/
@@ -63511,11 +63597,17 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(MovieAddPopup).call(this, props));
     _this.state = {
-      active: _this.props.active
+      active: _this.props.active // Popup show status
+
     };
     _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Popup close handling
+   * @param {Event} e
+   */
+
 
   _createClass(MovieAddPopup, [{
     key: "close",
@@ -63608,6 +63700,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
+/**
+ * Movie deleting form
+ */
 
 var MovieDeleteForm =
 /*#__PURE__*/
@@ -63623,6 +63718,11 @@ function (_Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Handle form submit
+   * @param {Event} e
+   */
+
 
   _createClass(MovieDeleteForm, [{
     key: "handleSubmit",
@@ -63636,10 +63736,8 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: formData
-      }).then(function () {
-        return document.location.reload();
-      });
-      this.props.handler();
+      }).then(this.props.handler() // () => document.location.reload()
+      );
     }
   }, {
     key: "render",
@@ -63708,6 +63806,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Movie deleting popup on admin page
+ */
 
 var MovieAddPopup =
 /*#__PURE__*/
@@ -63726,6 +63827,11 @@ function (_Component) {
     _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Popup close handling
+   * @param {Event} e
+   */
+
 
   _createClass(MovieAddPopup, [{
     key: "close",
@@ -63838,7 +63944,17 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/** 
+  * Showtimes timeline step (in minutes)
+  * @constant
+  * @type {number}
+  * @default
+*/
+
 var TIMELINE_STEP = 5;
+/**
+ * Admin movie management block component
+ */
 
 var MovieMangementBlock =
 /*#__PURE__*/
@@ -63853,14 +63969,22 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(MovieMangementBlock).call(this, props));
     _this.state = {
       createPopupOn: false,
+      // Movie Create Popup active status
       deletePopupOn: false,
+      // Movie Delete Popup active status
       createStPopupOn: false,
+      // Showtime Create Popup active status
       deleteStPopupOn: false,
+      // Showtime Delete Popup active status
       data: null,
       deleteId: null,
+      // Deleted showtime id
       showtimes: {},
+      // Showtimes matrix
       stData: null,
-      stTime: null
+      // dragged showtime data
+      stTime: null // dragged showtime current time
+
     };
     _this.handleCreateClick = _this.handleCreateClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDeleteClick = _this.handleDeleteClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -63873,148 +63997,22 @@ function (_Component) {
     _this.cancel = _this.cancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.reInit = _this.reInit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
-  }
+  } // ====== Primary methods =====
+
+  /**
+   * Add showtime
+   * @return {EVent} e
+   */
+
 
   _createClass(MovieMangementBlock, [{
-    key: "handleCreateClick",
-    value: function handleCreateClick() {
-      this.setState({
-        createPopupOn: true
-      });
-    }
-  }, {
-    key: "handleDeleteClick",
-    value: function handleDeleteClick(el, e) {
-      this.setState({
-        deletePopupOn: true,
-        deletedMovie: el
-      });
-    }
-  }, {
-    key: "handleStDeleteClick",
-    value: function handleStDeleteClick(el, e) {
-      this.setState({
-        deleteStPopupOn: true,
-        deletedShowtime: el
-      });
-    }
-  }, {
-    key: "handleDragStart",
-    value: function handleDragStart(e) {
-      var data = {
-        id: e.target.dataset.id,
-        title: e.target.dataset.title,
-        duration: e.target.dataset.duration,
-        color: getComputedStyle(e.target).backgroundColor
-      };
-      e.dataTransfer.setData("text", JSON.stringify(data));
-    }
-  }, {
-    key: "handleDragOver",
-    value: function handleDragOver(e) {
-      e.preventDefault();
-      var floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
-
-      if (e.target.classList.contains('conf-step__seances-timeline')) {
-        var pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
-        var width = parseInt(getComputedStyle(e.target).width);
-        var time = this.intToTimeString(pos / width * 24 * 60);
-
-        if (!floatingTime) {
-          floatingTime = document.createElement('p');
-          floatingTime.classList.add('conf-step__seances-timeline-floating-time');
-          e.target.appendChild(floatingTime);
-        }
-
-        floatingTime.style.left = pos + 'px';
-        floatingTime.textContent = time;
-        this.setState({
-          stTime: time
-        });
-      } else {
-        if (floatingTime) {
-          floatingTime.remove();
-          this.setState({
-            stTime: null
-          });
-        }
-      }
-    }
-  }, {
-    key: "handleDrop",
-    value: function handleDrop(e) {
-      e.preventDefault();
-
-      if (e.target.classList.contains('conf-step__seances-timeline')) {
-        var data = JSON.parse(e.dataTransfer.getData("text"));
-        var floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
-        floatingTime.remove();
-        data.parentWidth = parseInt(getComputedStyle(e.target).width);
-        data.hallId = e.target.dataset.id;
-        data.pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
-        data.time = this.intToTimeString(data.pos / data.parentWidth * 24 * 60);
-        this.setState({
-          createStPopupOn: true,
-          stData: data
-        }); // this.addShowtime(data);
-      }
-    }
-  }, {
-    key: "intToTimeString",
-    value: function intToTimeString(i) {
-      // Helper 
-      var _ref = [parseInt(Math.floor(i / 60)), parseInt(i % 24)],
-          h = _ref[0],
-          m = _ref[1];
-      m = Math.floor(m / TIMELINE_STEP) * TIMELINE_STEP;
-
-      var _map = [h, m].map(function (x) {
-        return (x < 10 ? '0' : '') + x;
-      });
-
-      var _map2 = _slicedToArray(_map, 2);
-
-      h = _map2[0];
-      m = _map2[1];
-      return "".concat(h, ":").concat(m);
-    }
-  }, {
-    key: "timeToInt",
-    value: function timeToInt(t) {
-      // Helper
-      var _t$split$map = t.split(':').map(function (x) {
-        return parseInt(x);
-      }),
-          _t$split$map2 = _slicedToArray(_t$split$map, 2),
-          h = _t$split$map2[0],
-          m = _t$split$map2[1];
-
-      return h * 60 + m;
-    }
-  }, {
-    key: "filterInitialShowtimes",
-    value: function filterInitialShowtimes(initial) {
-      var showtimes = Object.assign({}, this.state.showtimes);
-      Object.entries(showtimes).forEach(function (hall) {
-        var _hall = _slicedToArray(hall, 2),
-            id = _hall[0],
-            h = _hall[1];
-
-        showtimes[id] = h.filter(function (st) {
-          return st.initial !== initial;
-        });
-      });
-      return showtimes;
-    }
-  }, {
     key: "addShowtime",
     value: function addShowtime(e) {
       e.preventDefault();
       var data = this.state.stData;
-      console.log('ADdShowtime data', data);
+      console.log('AddShowtime data', data);
       var width = data.parentWidth * data.duration / 24 / 60;
-      var pos = data.parentWidth * this.timeToInt(data.time) / 24 / 60; // let time = this.intToTimeString(pos / width * 24 * 60);     
-
+      var pos = data.parentWidth * this.timeToInt(data.time) / 24 / 60;
       var style = {
         width: width,
         color: data.color,
@@ -64035,6 +64033,11 @@ function (_Component) {
       this.reInit();
       this.forceUpdate();
     }
+    /**
+     * Convert hall list to JSX
+     * @return {Array} result
+     */
+
   }, {
     key: "buildHallList",
     value: function buildHallList() {
@@ -64087,6 +64090,11 @@ function (_Component) {
       });
       return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
     }
+    /**
+     * Convert movie list to JSX
+     * @return {Array} result
+     */
+
   }, {
     key: "buildMovieList",
     value: function buildMovieList() {
@@ -64121,6 +64129,10 @@ function (_Component) {
       });
       return result;
     }
+    /**
+     * Cancel showtime adding and removeing added showtimes to 
+     */
+
   }, {
     key: "cancel",
     value: function cancel() {
@@ -64129,9 +64141,15 @@ function (_Component) {
       });
       this.forceUpdate();
     }
+    /**
+     * Save added showtimes to db
+     */
+
   }, {
     key: "save",
     value: function save() {
+      var _this4 = this;
+
       var showtimes = this.filterInitialShowtimes(true);
       Object.values(this.state.showtimes).forEach(function (hall) {
         hall.forEach(function (st) {
@@ -64145,9 +64163,16 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(showtimes)
-      }).then( // () => document.location.reload()
-      this.forceUpdate());
+      }).then(function () {
+        document.location.reload();
+
+        _this4.forceUpdate();
+      });
     }
+    /**
+     * Reinitialisung showtime properties
+     */
+
   }, {
     key: "reInit",
     value: function reInit() {
@@ -64156,7 +64181,197 @@ function (_Component) {
         stTime: null,
         createStPopupOn: false
       });
+    } // ====== Helpers =====
+
+    /**
+     * Convert integer to H:i time string
+     * @param {number} i
+     * @return {string}
+     */
+
+  }, {
+    key: "intToTimeString",
+    value: function intToTimeString(i) {
+      // Helper 
+      var _ref = [parseInt(Math.floor(i / 60)), parseInt(i % 24)],
+          h = _ref[0],
+          m = _ref[1];
+      m = Math.floor(m / TIMELINE_STEP) * TIMELINE_STEP;
+
+      var _map = [h, m].map(function (x) {
+        return (x < 10 ? '0' : '') + x;
+      });
+
+      var _map2 = _slicedToArray(_map, 2);
+
+      h = _map2[0];
+      m = _map2[1];
+      return "".concat(h, ":").concat(m);
     }
+    /**
+     * Convert H:i time string to integer
+     * @param {string} t
+     * @return {number}
+     */
+
+  }, {
+    key: "timeToInt",
+    value: function timeToInt(t) {
+      var _t$split$map = t.split(':').map(function (x) {
+        return parseInt(x);
+      }),
+          _t$split$map2 = _slicedToArray(_t$split$map, 2),
+          h = _t$split$map2[0],
+          m = _t$split$map2[1];
+
+      return h * 60 + m;
+    }
+    /**
+     * Filter showtimes in showtime object by 'initial' value
+     * @param {boolean} initial
+     * @return {Array} showetimes
+     */
+
+  }, {
+    key: "filterInitialShowtimes",
+    value: function filterInitialShowtimes(initial) {
+      var showtimes = Object.assign({}, this.state.showtimes);
+      Object.entries(showtimes).forEach(function (hall) {
+        var _hall = _slicedToArray(hall, 2),
+            id = _hall[0],
+            h = _hall[1];
+
+        showtimes[id] = h.filter(function (st) {
+          return st.initial !== initial;
+        });
+      });
+      return showtimes;
+    } // ====== Handlers =====
+
+    /**
+     * Handle Movie create button click
+     */
+
+  }, {
+    key: "handleCreateClick",
+    value: function handleCreateClick() {
+      this.setState({
+        createPopupOn: true
+      });
+    }
+    /**
+     * Handle Movie node double click
+     * @param {Object} el
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleDeleteClick",
+    value: function handleDeleteClick(el, e) {
+      this.setState({
+        deletePopupOn: true,
+        deletedMovie: el
+      });
+    }
+    /**
+     * Handle Showtime node double click
+     * @param {Object} el
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleStDeleteClick",
+    value: function handleStDeleteClick(el, e) {
+      this.setState({
+        deleteStPopupOn: true,
+        deletedShowtime: el
+      });
+    }
+    /**
+     * Handle Movie drag start
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleDragStart",
+    value: function handleDragStart(e) {
+      var data = {
+        id: e.target.dataset.id,
+        title: e.target.dataset.title,
+        duration: e.target.dataset.duration,
+        color: getComputedStyle(e.target).backgroundColor
+      };
+      e.dataTransfer.setData("text", JSON.stringify(data));
+    }
+    /**
+     * Handle Movie drag over timeline node
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleDragOver",
+    value: function handleDragOver(e) {
+      e.preventDefault();
+      var floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
+
+      if (e.target.classList.contains('conf-step__seances-timeline')) {
+        var pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left); // Movie node position in timeline node
+
+        var width = parseInt(getComputedStyle(e.target).width); // Timeline width  
+
+        var time = this.intToTimeString(pos / width * 24 * 60); // Time string calculated from node position
+
+        if (!floatingTime) {
+          // Create floating time node
+          floatingTime = document.createElement('p');
+          floatingTime.classList.add('conf-step__seances-timeline-floating-time');
+          e.target.appendChild(floatingTime);
+        }
+
+        floatingTime.style.left = pos + 'px';
+        floatingTime.textContent = time;
+        this.setState({
+          stTime: time
+        });
+      } else {
+        if (floatingTime) {
+          // Remove floating time node
+          floatingTime.remove();
+          this.setState({
+            stTime: null
+          });
+        }
+      }
+    }
+    /**
+     * Handle Movie drop timeline node
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleDrop",
+    value: function handleDrop(e) {
+      e.preventDefault();
+
+      if (e.target.classList.contains('conf-step__seances-timeline')) {
+        var data = JSON.parse(e.dataTransfer.getData("text"));
+        var floatingTime = document.querySelector('p.conf-step__seances-timeline-floating-time');
+        floatingTime.remove();
+        data.parentWidth = parseInt(getComputedStyle(e.target).width);
+        data.hallId = e.target.dataset.id;
+        data.pos = Math.floor(e.clientX - e.target.getBoundingClientRect().left);
+        data.time = this.intToTimeString(data.pos / data.parentWidth * 24 * 60);
+        this.setState({
+          createStPopupOn: true,
+          stData: data
+        }); // this.addShowtime(data);
+      }
+    }
+    /**
+     * Handle change Hall input in Showtime add form
+     * @param {Event} e
+     */
+
   }, {
     key: "handleChangeHall",
     value: function handleChangeHall(e) {
@@ -64166,6 +64381,11 @@ function (_Component) {
         stData: data
       });
     }
+    /**
+     * Handle change Time input in Showtime add form
+     * @param {Event} e
+     */
+
   }, {
     key: "handleChangeTime",
     value: function handleChangeTime(e) {
@@ -64174,11 +64394,12 @@ function (_Component) {
       this.setState({
         stData: data
       });
-    }
+    } // ======= Events ======
+
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (document.getElementById('popups_movies')) {
         react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieAddPopup__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -64193,7 +64414,7 @@ function (_Component) {
           time: this.state.stTime,
           reInit: this.reInit,
           addShowtime: function addShowtime(e) {
-            return _this4.addShowtime(e);
+            return _this5.addShowtime(e);
           },
           handleChangeHall: this.handleChangeHall,
           handleChangeTime: this.handleChangeTime
@@ -64206,19 +64427,17 @@ function (_Component) {
   }, {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(props) {
-      var _this5 = this;
+      var _this6 = this;
 
-      var showtimes = props.showtimes; // let timelineNode = document.querySelector('.conf-step__seances-timeline')[0];
-      // let width = timelineNode.getComputedStyle('width');
-
-      var width = 720;
+      var showtimes = props.showtimes;
+      var width = 720; // Here timeline node width is hardcoded because there's no other way to calculate it
 
       if (showtimes) {
         Object.values(showtimes).forEach(function (hall) {
           return hall.forEach(function (st) {
             st.style = {
               width: width * st.duration / 24 / 60,
-              left: width * _this5.timeToInt(st.startTime) / 24 / 60,
+              left: width * _this6.timeToInt(st.startTime) / 24 / 60,
               color: 'white'
             };
           });
@@ -64293,6 +64512,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
+/**
+ * Showtime adding form
+ */
 
 var ShowtimeAddForm =
 /*#__PURE__*/
@@ -64304,25 +64526,12 @@ function (_Component) {
 
     return _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeAddForm).call(this, props));
   }
+  /**
+   * Showtime hall object to options list
+   */
+
 
   _createClass(ShowtimeAddForm, [{
-    key: "previewFile",
-    value: function previewFile() {
-      var preview = document.getElementById('preview');
-      var file = document.querySelector('input[name="image"]').files[0];
-      var reader = new FileReader();
-
-      reader.onloadend = function () {
-        preview.src = reader.result;
-      };
-
-      if (file) {
-        reader.readAsDataURL(file);
-      } else {
-        preview.src = "";
-      }
-    }
-  }, {
     key: "buildHallList",
     value: function buildHallList() {
       if (!this.props.halls || !this.props.data) {
@@ -64420,6 +64629,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Showtime adding popup on admin page
+ */
 
 var ShowtimeAddPopup =
 /*#__PURE__*/
@@ -64438,6 +64650,11 @@ function (_Component) {
     _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Popup close handling
+   * @param {Event} e
+   */
+
 
   _createClass(ShowtimeAddPopup, [{
     key: "close",
@@ -64551,6 +64768,10 @@ function (_Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Handle form submit
+   */
+
 
   _createClass(ShowtimeDeleteForm, [{
     key: "handleSubmit",
@@ -64606,7 +64827,7 @@ function (_Component) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ShowtimeAddPopup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ShowtimeDeletePopup; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ShowtimeDeleteForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowtimeDeleteForm */ "./resources/assets/js/components/ShowtimeDeleteForm.js");
@@ -64630,26 +64851,34 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+/**
+ * Hall adding popup on admin page
+ */
 
-var ShowtimeAddPopup =
+var ShowtimeDeletePopup =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(ShowtimeAddPopup, _Component);
+  _inherits(ShowtimeDeletePopup, _Component);
 
-  function ShowtimeAddPopup(props) {
+  function ShowtimeDeletePopup(props) {
     var _this;
 
-    _classCallCheck(this, ShowtimeAddPopup);
+    _classCallCheck(this, ShowtimeDeletePopup);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeAddPopup).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ShowtimeDeletePopup).call(this, props));
     _this.state = {
       active: _this.props.active
     };
     _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
+  /**
+   * Popup close handling
+   * @param {Event} e
+   */
 
-  _createClass(ShowtimeAddPopup, [{
+
+  _createClass(ShowtimeDeletePopup, [{
     key: "close",
     value: function close(e) {
       if (e !== undefined) {
@@ -64703,7 +64932,7 @@ function (_Component) {
     }
   }]);
 
-  return ShowtimeAddPopup;
+  return ShowtimeDeletePopup;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 

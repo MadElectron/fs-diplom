@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+ * Admin prices inputs
+ */
 export default class HallPrices extends Component {
   constructor(props) {
     super(props);

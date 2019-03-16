@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * Movie deleting form
+ */
 export default class MovieDeleteForm extends Component {
     constructor(props) {
       super(props);
@@ -7,6 +10,10 @@ export default class MovieDeleteForm extends Component {
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Handle form submit
+     * @param {Event} e
+     */
     handleSubmit(e) {
       e.preventDefault();
 
@@ -20,10 +27,10 @@ export default class MovieDeleteForm extends Component {
         },
         body: formData
       }).then(
-        () => document.location.reload()
+        this.props.handler()
+        // () => document.location.reload()
       );
 
-      this.props.handler();
     }
 
     render() {

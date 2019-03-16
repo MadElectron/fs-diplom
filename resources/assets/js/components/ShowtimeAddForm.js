@@ -1,26 +1,16 @@
 import React, { Component } from 'react';
 
+/**
+ * Showtime adding form
+ */
 export default class ShowtimeAddForm extends Component {
     constructor(props) {
       super(props);
     }
 
-    previewFile() {
-      let preview = document.getElementById('preview');
-      let file    = document.querySelector('input[name="image"]').files[0];
-      let reader  = new FileReader();
-
-      reader.onloadend = function () {
-          preview.src = reader.result;
-      }
-
-      if (file) {
-          reader.readAsDataURL(file);
-      } else {
-          preview.src = "";
-      }      
-    }
-
+    /**
+     * Showtime hall object to options list
+     */
     buildHallList() {
 
       if (!this.props.halls || !this.props.data) {

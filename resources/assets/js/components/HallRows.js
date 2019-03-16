@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+ * Admin hall rows inputs
+ */
 export default class HallRows extends Component {
   constructor(props) {
     super(props);

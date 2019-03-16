@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Movie;
+use App\Showtime;
 
 class MoviesController extends Controller
 {
@@ -104,6 +105,7 @@ class MoviesController extends Controller
      */
     public function destroy($id)
     {
+        Showtime::where('movie_id', '=', $id)->delete();
         Movie::where('id','=', $id)->delete();
     
         $destinationPath = public_path('/i/posters');
