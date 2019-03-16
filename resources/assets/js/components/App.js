@@ -16,6 +16,7 @@ class App extends Component {
       halls:     null, 
       movies:    null,
       showtimes: null,
+      prices:    null,
     }
   }
 
@@ -67,6 +68,20 @@ class App extends Component {
     ); 
   }
 
+  // /**
+  //  * Get price list from db
+  //  * @return {Promise}
+  //  */
+  // getPricesList() {
+  //   return fetch('/showtimes/list',{
+  //     method: "POST",
+  //     headers: {
+  //       'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+  //     },
+  //   }).then(
+  //     resp => resp.json()
+  //   ); 
+  // }
 
 
   // ====== Helpers =====

@@ -22,7 +22,7 @@ export default class HallRows extends Component {
           <span className="multiplier">x</span>
           <label className="conf-step__label">
             Мест, шт<input type="text" className="conf-step__input" placeholder="8" 
-              value={this.props.places} onChange={this.props.placesHandler} disabled={this.props.places ? 'disabled' : false}/>
+              value={this.props.places} onChange={this.props.placesHandler} disabled={this.props.places}/>
           </label>
         </div>
       </div>

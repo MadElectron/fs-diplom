@@ -108,7 +108,6 @@ export default class MovieMangementBlock extends Component {
         const hallShowtimes = [];
 
         if (this.state.showtimes && this.state.showtimes.hasOwnProperty(el.id)) {
-          this.state.showtimes[el.id].forEach(el => console.log(el));
 
           this.state.showtimes[el.id].forEach((el, index) => hallShowtimes.push(
             <div key={index} className="conf-step__seances-movie" style={{

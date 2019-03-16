@@ -60657,7 +60657,8 @@ function (_Component) {
     _this.state = {
       halls: null,
       movies: null,
-      showtimes: null
+      showtimes: null,
+      prices: null
     };
     return _this;
   } // ====== Primary methods =====
@@ -60713,7 +60714,21 @@ function (_Component) {
       }).then(function (resp) {
         return resp.json();
       });
-    } // ====== Helpers =====
+    } // /**
+    //  * Get price list from db
+    //  * @return {Promise}
+    //  */
+    // getPricesList() {
+    //   return fetch('/showtimes/list',{
+    //     method: "POST",
+    //     headers: {
+    //       'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    //     },
+    //   }).then(
+    //     resp => resp.json()
+    //   ); 
+    // }
+    // ====== Helpers =====
 
     /**
      * Convert showtimes array to synthetic data structure, used in Movie Management Block
@@ -62826,6 +62841,7 @@ function (_Component) {
     _this.handleHallVipPriceChange = _this.handleHallVipPriceChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.getPriceByType = _this.getPriceByType.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   } // ====== Primary methods =====
 
@@ -62861,6 +62877,26 @@ function (_Component) {
         }, el.title)));
       });
       return result.length ? result : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 \u0437\u0430\u043B\u043E\u0432");
+    }
+    /**
+     * Get price from Hall property by place type id
+     * @param {number} type
+     * @return {number}
+     */
+
+  }, {
+    key: "getPriceByType",
+    value: function getPriceByType(type) {
+      var hall = this.state.selectedHall;
+
+      if (hall.prices.length === 0) {
+        return '';
+      }
+
+      var price = hall.prices.filter(function (p) {
+        return p.type === type;
+      })[0];
+      return price.price;
     } // ====== Handlers ======
 
     /**
@@ -62873,8 +62909,11 @@ function (_Component) {
     key: "handleHallSelect",
     value: function handleHallSelect(el, e) {
       this.setState({
-        selectedHall: el
+        selectedHall: el,
+        selectedHallStandartPrice: null,
+        selectedHallVipPrice: null
       });
+      this.forceUpdate();
     }
     /**
      * Hall standart price input change
@@ -62884,6 +62923,7 @@ function (_Component) {
   }, {
     key: "handleHallStandartPriceChange",
     value: function handleHallStandartPriceChange(e) {
+      console.log('change');
       this.setState({
         selectedHallStandartPrice: e.target.value
       });
@@ -62920,11 +62960,21 @@ function (_Component) {
     key: "handleSave",
     value: function handleSave() {
       var hall = this.state.selectedHall;
-      var data = {
-        0: this.state.selectedHallStandartPrice,
-        1: this.state.selectedHallVipPrice
-      };
-      fetch("/place-type-prices/add/".concat(hall.id), {
+      var data = {};
+
+      if (this.state.selectedHallStandartPrice) {
+        data[1] = this.state.selectedHallStandartPrice;
+      }
+
+      if (this.state.selectedHallVipPrice) {
+        data[2] = this.state.selectedHallVipPrice;
+      } // 1: ,
+      // 2: this.state.selectedHallVipPrice
+
+
+      var action = this.state.selectedHall.prices.length ? 'edit' : 'add';
+      console.log(action);
+      fetch("/place-type-prices/".concat(action, "/").concat(hall.id), {
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -62938,21 +62988,22 @@ function (_Component) {
     key: "render",
     value: function render() {
       var hallPrices = null;
-      var disabled; // @TODO: Это работает только если зал без цен
+      var disabled;
 
       if (this.state.selectedHall) {
-        hallPrices = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallPrices__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        hallPrices = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HallPrices__WEBPACK_IMPORTED_MODULE_2__["default"] // hall={this.state.selectedHall}
+        , {
+          standartPrice: this.getPriceByType(1),
+          vipPrice: this.getPriceByType(2),
           standartPriceHandler: this.handleHallStandartPriceChange,
           vipPriceHandler: this.handleHallVipPriceChange
         });
-      } // @ TODO: не работает
+      } // if (this.state.selectedHallStandartPrices && this.state.selectedHallVipPrices) {
+      //   disabled = 'disabled';
+      // } else {
+      //   disabled = '';
+      // }
 
-
-      if (this.state.selectedHallStandartPrices && this.state.selectedHallVipPrices) {
-        disabled = 'disabled';
-      } else {
-        disabled = '';
-      }
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "conf-step__selectors-box"
@@ -63029,16 +63080,21 @@ function (_Component) {
   _createClass(HallPrices, [{
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      console.log('rerender');
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "hallPrices"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "conf-step__paragraph"
       }, "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u0446\u0435\u043D\u044B \u0434\u043B\u044F \u0442\u0438\u043F\u043E\u0432 \u043A\u0440\u0435\u0441\u0435\u043B:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "conf-step__legend"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "conf-step__label"
       }, "\u0426\u0435\u043D\u0430, \u0440\u0443\u0431\u043B\u0435\u0439", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
+        key: this.props.standartPrice,
+        type: "number",
         className: "conf-step__input",
         placeholder: "0",
+        defaultValue: this.props.standartPrice,
         onChange: this.props.standartPriceHandler
       })), "\u0437\u0430 ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "conf-step__chair conf-step__chair_standart"
@@ -63047,9 +63103,11 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "conf-step__label"
       }, "\u0426\u0435\u043D\u0430, \u0440\u0443\u0431\u043B\u0435\u0439", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
+        key: this.props.vipPrice,
+        type: "number",
         className: "conf-step__input",
         placeholder: "0",
+        defaultValue: this.props.vipPrice,
         onChange: this.props.vipPriceHandler
       })), "\u0437\u0430 ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "conf-step__chair conf-step__chair_vip"
@@ -63139,7 +63197,7 @@ function (_Component) {
         placeholder: "8",
         value: this.props.places,
         onChange: this.props.placesHandler,
-        disabled: this.props.places ? 'disabled' : false
+        disabled: this.props.places
       }))));
     }
   }]);
@@ -64052,10 +64110,6 @@ function (_Component) {
         var hallShowtimes = [];
 
         if (_this2.state.showtimes && _this2.state.showtimes.hasOwnProperty(el.id)) {
-          _this2.state.showtimes[el.id].forEach(function (el) {
-            return console.log(el);
-          });
-
           _this2.state.showtimes[el.id].forEach(function (el, index) {
             return hallShowtimes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
               key: index,

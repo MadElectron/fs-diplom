@@ -78,9 +78,17 @@ class PlaceTypePricesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $hallId)
     {
-        //
+        $data = json_decode($request->getContent(), true);
+
+        foreach($data as $type => $price) {
+            
+            PlaceTypePrice::where([
+                ['hall_id', '=', $hallId],
+                ['type', '=', $type]
+            ])->update(['price' => $price]);
+        }    
     }
 
     /**

@@ -20,6 +20,7 @@ export default class HallPriceBlock extends Component {
    this.handleHallVipPriceChange = this.handleHallVipPriceChange.bind(this);
    this.handleCancel = this.handleCancel.bind(this);
    this.handleSave = this.handleSave.bind(this);
+   this.getPriceByType = this.getPriceByType.bind(this);
   }
 
   // ====== Primary methods =====
@@ -50,6 +51,22 @@ export default class HallPriceBlock extends Component {
     return result.length ? result : <p>Нет доступных залов</p>;
   }
 
+  /**
+   * Get price from Hall property by place type id
+   * @param {number} type
+   * @return {number}
+   */
+  getPriceByType(type) {
+    let hall = this.state.selectedHall;
+
+    if (hall.prices.length === 0) {
+      return '';
+    }
+
+    let price = hall.prices.filter(p => p.type === type)[0];
+
+    return price.price;
+  }
 
   // ====== Handlers ======
 
@@ -60,9 +77,15 @@ export default class HallPriceBlock extends Component {
    * @param {Event} e
    */
   handleHallSelect(el, e) {
+
     this.setState({
       selectedHall: el,
-    });            
+      selectedHallStandartPrice: null,
+      selectedHallVipPrice: null,
+    });       
+
+    this.forceUpdate();
+
   }
 
 
@@ -71,6 +94,7 @@ export default class HallPriceBlock extends Component {
    * @param {Event} e
    */
   handleHallStandartPriceChange(e) {
+    console.log('change')
     this.setState({
       selectedHallStandartPrice: e.target.value,
     });            
@@ -105,12 +129,23 @@ export default class HallPriceBlock extends Component {
   handleSave() {
     const hall = this.state.selectedHall;
 
-    const data = {
-      0: this.state.selectedHallStandartPrice,
-      1: this.state.selectedHallVipPrice
-    };
+    const data = {};
 
-    fetch(`/place-type-prices/add/${hall.id}`,{
+    if (this.state.selectedHallStandartPrice) {
+      data[1] = this.state.selectedHallStandartPrice;
+    }
+
+    if (this.state.selectedHallVipPrice) {
+      data[2] = this.state.selectedHallVipPrice;
+    }
+
+      // 1: ,
+      // 2: this.state.selectedHallVipPrice
+
+    let action = this.state.selectedHall.prices.length ? 'edit' : 'add';
+    console.log(action);
+
+    fetch(`/place-type-prices/${action}/${hall.id}`,{
       method: "POST",
       headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -126,21 +161,21 @@ export default class HallPriceBlock extends Component {
     let hallPrices = null;
     let disabled;
 
-    // @TODO: Это работает только если зал без цен
-
     if (this.state.selectedHall) {
       hallPrices = <HallPrices
+          // hall={this.state.selectedHall}
+          standartPrice ={this.getPriceByType(1)}
+          vipPrice ={this.getPriceByType(2)}
           standartPriceHandler={this.handleHallStandartPriceChange} 
           vipPriceHandler={this.handleHallVipPriceChange}         
       />;
     }
 
-    // @ TODO: не работает
-    if (this.state.selectedHallStandartPrices && this.state.selectedHallVipPrices) {
-      disabled = 'disabled';
-    } else {
-      disabled = '';
-    }
+    // if (this.state.selectedHallStandartPrices && this.state.selectedHallVipPrices) {
+    //   disabled = 'disabled';
+    // } else {
+    //   disabled = '';
+    // }
 
     return (
         <div>
