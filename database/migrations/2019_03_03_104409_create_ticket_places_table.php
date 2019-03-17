@@ -15,8 +15,8 @@ class CreateTicketPlacesTable extends Migration
     {
         Schema::create('ticket_places', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('ticket_id');
-            $table->integer('place_id');
+            $table->integer('ticket_id')->unsigned();
+            $table->integer('place_id')->unsigned();
             $table->foreign('ticket_id')->references('id')->on('tickets');
             $table->foreign('place_id')->references('id')->on('places');
         });

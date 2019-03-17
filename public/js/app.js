@@ -63185,8 +63185,9 @@ function (_Component) {
         className: "conf-step__input",
         placeholder: "10",
         value: this.props.rows,
-        onChange: this.props.rowsHandler,
-        disabled: this.props.rows
+        onChange: this.props.rowsHandler
+        /* disabled={this.props.rows} */
+
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "multiplier"
       }, "x"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -63196,8 +63197,9 @@ function (_Component) {
         className: "conf-step__input",
         placeholder: "8",
         value: this.props.places,
-        onChange: this.props.placesHandler,
-        disabled: this.props.places
+        onChange: this.props.placesHandler
+        /*  disabled={this.props.places}  */
+
       }))));
     }
   }]);
