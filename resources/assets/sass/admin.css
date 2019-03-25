@@ -499,6 +499,11 @@ fieldset {
       margin-bottom: 0; }
   .login__input {
     width: 100%; }
+  .login__error {
+    margin-bottom: 0.4em;
+    text-align: center;
+    font-size: 1.6rem;
+    color: #E21E06; }
 
 .popup {
   display: none;

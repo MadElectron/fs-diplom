@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Авторизация | ИдёмВКино</title>
@@ -17,29 +18,9 @@
     <span class="page-header__subtitle">Администраторррская</span>
   </header>
   
-  <main>
-    <section class="login">
-      <header class="login__header">
-        <h2 class="login__title">Авторизация</h2>
-      </header>
-      <div class="login__wrapper">
-        <form class="login__form" action="login_submit" method="get" accept-charset="utf-8">
-          <label class="login__label" for="mail">
-            E-mail
-            <input class="login__input" type="mail" placeholder="example@domain.xyz" name="mail" required>
-          </label>
-          <label class="login__label" for="pwd">
-            Пароль
-            <input class="login__input" type="password" placeholder="" name="pwd" required>
-          </label>
-          <div class="text-center">
-            <input value="Авторизоваться" type="submit" class="login__button">
-          </div>
-        </form>
-      </div>
-    </section>
-  </main>
+  <main id="login"></main>
 
+  <script src="{{mix('js/app.js')}}"></script>
   <script src="js/accordeon.js"></script>
 </body>
 </html>

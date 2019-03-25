@@ -60522,6 +60522,8 @@ __webpack_require__(/*! ./components/Client */ "./resources/assets/js/components
 
 __webpack_require__(/*! ./components/App */ "./resources/assets/js/components/App.js");
 
+__webpack_require__(/*! ./components/LoginForm */ "./resources/assets/js/components/LoginForm.js");
+
 /***/ }),
 
 /***/ "./resources/assets/js/bootstrap.js":
@@ -60655,6 +60657,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
+      // user:      null, 
       halls: null,
       movies: null,
       showtimes: null,
@@ -60770,6 +60773,14 @@ function (_Component) {
     } // ====== Events ======
 
   }, {
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      // Слишком просто
+      if (!localStorage.getItem('access_token')) {
+        document.location.href = '/login';
+      }
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
@@ -60842,7 +60853,19 @@ function (_Component) {
         data: this.state.halls,
         movieData: this.state.movies,
         showtimes: this.state.showtimes
-      }))));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+        className: "conf-step"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
+        className: "conf-step__header conf-step__header_opened"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "conf-step__title"
+      }, "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u043E\u0434\u0430\u0436\u0438")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__wrapper text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "conf-step__paragraph"
+      }, "\u0412\u0441\u0451 \u0433\u043E\u0442\u043E\u0432\u043E, \u0442\u0435\u043F\u0435\u0440\u044C \u043C\u043E\u0436\u043D\u043E:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-accent"
+      }, "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u043E\u0434\u0430\u0436\u0443 \u0431\u0438\u043B\u0435\u0442\u043E\u0432"))));
     }
   }]);
 
@@ -61997,7 +62020,7 @@ function (_Component) {
     value: function handleSubmit(e) {
       e.preventDefault();
       var formData = new FormData(e.target);
-      fetch('/halls/add', {
+      fetch('/api/auth/login', {
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -62007,7 +62030,6 @@ function (_Component) {
         return document.location.reload();
       } // Don't know how to rerender the Hall list only :-(
       );
-      this.props.handler();
     }
   }, {
     key: "render",
@@ -63437,6 +63459,156 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/LoginForm.js":
+/*!*****************************************************!*\
+  !*** ./resources/assets/js/components/LoginForm.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LoginForm; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+/**
+ * Login form
+ */
+
+var LoginForm =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(LoginForm, _Component);
+
+  function LoginForm(props) {
+    var _this;
+
+    _classCallCheck(this, LoginForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(LoginForm).call(this, props));
+    _this.state = {
+      error: null
+    };
+    _this.login = _this.login.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(LoginForm, [{
+    key: "login",
+    value: function login(e) {
+      var _this2 = this;
+
+      e.preventDefault();
+      var formData = new FormData(e.target);
+      formData.set('grant_type', 'password');
+      formData.set('client_secret', 'O5Wq3Sy8QoEc8i7049WprMBZEpFwzEcWIrMbLORj');
+      formData.set('client_id', 1);
+      fetch('/api/auth/login', {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+      }).then(function (resp) {
+        return resp.json();
+      }).then(function (resp) {
+        if (resp.error === 'invalid_credentials') {
+          _this2.state.error = "Неверный пользователь или пароль";
+
+          _this2.forceUpdate();
+        } else {
+          localStorage.setItem('access_token', resp.access_token);
+          document.location.href = '/admin';
+        }
+      });
+    }
+  }, {
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      if (localStorage.getItem('access_token')) {
+        document.location.href = '/admin';
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+        className: "login"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
+        className: "login__header"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "login__title"
+      }, "\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "login__wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "login__error"
+      }, this.state.error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        className: "login__form",
+        action: "login_submit",
+        method: "post",
+        acceptCharset: "utf-8",
+        onSubmit: this.login
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "login__label",
+        htmlFor: "username"
+      }, "E-mail", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "login__input",
+        type: "mail",
+        placeholder: "example@domain.xyz",
+        name: "username",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "login__label",
+        htmlFor: "password"
+      }, "\u041F\u0430\u0440\u043E\u043B\u044C", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "login__input",
+        type: "password",
+        placeholder: "",
+        name: "password",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        value: "\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u0442\u044C\u0441\u044F",
+        type: "submit",
+        className: "login__button"
+      })))));
+    }
+  }]);
+
+  return LoginForm;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+if (document.getElementById('login')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(LoginForm, null), document.getElementById('login'));
+}
 
 /***/ }),
 

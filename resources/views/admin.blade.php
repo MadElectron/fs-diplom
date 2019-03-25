@@ -13,6 +13,7 @@
 </head>
 
 <body>
+  <div id="popups_auth"></div>
   <div id="popups"></div>
   <div id="popups_movies"></div>
 
@@ -23,15 +24,7 @@
   
   <main class="conf-steps">
     <div id="app"></div>
-    <section class="conf-step">
-      <header class="conf-step__header conf-step__header_opened">
-        <h2 class="conf-step__title">Открыть продажи</h2>
-      </header>
-      <div class="conf-step__wrapper text-center">
-        <p class="conf-step__paragraph">Всё готово, теперь можно:</p>
-        <button class="conf-step__button conf-step__button-accent">Открыть продажу билетов</button>
-      </div>
-    </section>    
+     
   </main>
 
 

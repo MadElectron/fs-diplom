@@ -15,4 +15,5 @@ require('./bootstrap');
 
 require('./components/Client');
 require('./components/App');
+require('./components/LoginForm');
 

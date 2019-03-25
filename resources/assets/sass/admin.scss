@@ -8,6 +8,7 @@ $white: #FFFFFF;
 $grey: #848484;
 $lightgrey: #EAE9EB;
 $startyellow: #FFEB85;
+$red: #E21E06;
 $colors: 10;
 $degrees: 360 / $colors;
 
@@ -694,6 +695,13 @@ fieldset {
 
   &__input {
     width: 100%;
+  }
+
+  &__error {
+    margin-bottom: 0.4em;
+    text-align: center;
+    font-size: 1.6rem;
+    color: $red;
   }
 
 }

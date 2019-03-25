@@ -13,6 +13,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      // user:      null, 
       halls:     null, 
       movies:    null,
       showtimes: null,
@@ -68,6 +69,7 @@ class App extends Component {
     ); 
   }
 
+
   // /**
   //  * Get price list from db
   //  * @return {Promise}
@@ -116,6 +118,13 @@ class App extends Component {
 
 
   // ====== Events ======
+  componentWillMount() {
+    // Слишком просто
+    if (!localStorage.getItem('access_token')) {
+      document.location.href = '/login'
+    }
+  }
+
 
   componentDidMount() {
     console.log('App mounted');
@@ -150,49 +159,58 @@ class App extends Component {
   render() {
     return (
       <div>
-      <section className="conf-step">
-        <header className="conf-step__header conf-step__header_opened">
-          <h2 className="conf-step__title">Управление залами</h2>
-        </header>
+        <section className="conf-step">
+          <header className="conf-step__header conf-step__header_opened">
+            <h2 className="conf-step__title">Управление залами</h2>
+          </header>
 
-        <HallManagementBlock data={this.state.halls} />
-        
-      </section>
-      <section className="conf-step">
-        <header className="conf-step__header conf-step__header_opened">
-          <h2 className="conf-step__title">Конфигурация залов</h2>
-        </header>
-        <div className="conf-step__wrapper">
-          <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
-
-          <HallConfigurationBlock data={this.state.halls} />
-
-        </div>    
-      </section>
-      <section className="conf-step">
-        <header className="conf-step__header conf-step__header_opened">
-          <h2 className="conf-step__title">Конфигурация цен</h2>
-        </header>
-        <div className="conf-step__wrapper">
-          <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
-
-          <HallPriceBlock data={this.state.halls} />    
+          <HallManagementBlock data={this.state.halls} />
           
-        </div>
-      </section>
+        </section>
+        <section className="conf-step">
+          <header className="conf-step__header conf-step__header_opened">
+            <h2 className="conf-step__title">Конфигурация залов</h2>
+          </header>
+          <div className="conf-step__wrapper">
+            <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
 
-      <section className="conf-step">
+            <HallConfigurationBlock data={this.state.halls} />
+
+          </div>    
+        </section>
+        <section className="conf-step">
+          <header className="conf-step__header conf-step__header_opened">
+            <h2 className="conf-step__title">Конфигурация цен</h2>
+          </header>
+          <div className="conf-step__wrapper">
+            <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
+
+            <HallPriceBlock data={this.state.halls} />    
+            
+          </div>
+        </section>
+
+        <section className="conf-step">
+          <header className="conf-step__header conf-step__header_opened">
+            <h2 className="conf-step__title">Сетка сеансов</h2>
+          </header>
+          <div className="conf-step__wrapper">
+            
+            <MovieManagementBlock data={this.state.halls} movieData={this.state.movies} showtimes={this.state.showtimes} />  
+          </div>
+        </section>    
+
+        <section className="conf-step">
         <header className="conf-step__header conf-step__header_opened">
-          <h2 className="conf-step__title">Сетка сеансов</h2>
+          <h2 className="conf-step__title">Открыть продажи</h2>
         </header>
-        <div className="conf-step__wrapper">
-          
-          <MovieManagementBlock data={this.state.halls} movieData={this.state.movies} showtimes={this.state.showtimes} />  
+        <div className="conf-step__wrapper text-center">
+          <p className="conf-step__paragraph">Всё готово, теперь можно:</p>
+          <button className="conf-step__button conf-step__button-accent">Открыть продажу билетов</button>
         </div>
-      </section>            
+      </section>    
 
-
-    </div>
+      </div>
     );
   }
 }

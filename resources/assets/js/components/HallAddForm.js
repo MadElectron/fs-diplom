@@ -20,7 +20,7 @@ export default class HallAddForm extends Component {
 
       const formData = new FormData(e.target);
 
-      fetch('/halls/add',{
+      fetch('/api/auth/login',{
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -30,7 +30,6 @@ export default class HallAddForm extends Component {
         () => document.location.reload() // Don't know how to rerender the Hall list only :-(
       );
 
-      this.props.handler();
     }
 
     render() {
