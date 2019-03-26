@@ -60949,6 +60949,8 @@ function (_Component) {
       // Chosen showtime
       places: {},
       // Places matrix on scheme
+      qrCode: null,
+      // QR Code string
       step: 0
       /* Step of booking:
           0 - showtime choosing,
@@ -61130,8 +61132,11 @@ function (_Component) {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(ticket)
-      }).then(function () {
+      }).then(function (resp) {
+        return resp.text();
+      }).then(function (resp) {
         _this3.setState({
+          qrCode: resp,
           step: 3
         });
       });
@@ -61260,7 +61265,8 @@ function (_Component) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClientTicket__WEBPACK_IMPORTED_MODULE_6__["default"], {
             showtime: this.state.showtime,
             places: this.state.places,
-            stringifyPlaces: this.stringifyPlaces
+            stringifyPlaces: this.stringifyPlaces,
+            qrCode: this.state.qrCode
           });
 
         default:
@@ -61913,6 +61919,14 @@ function (_Component) {
   }
 
   _createClass(ClientTicket, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      // Making a QR Code image
+      var wrapper = document.getElementById('code');
+      new QRCode(wrapper, this.props.qrCode);
+      wrapper.querySelector('img').classList.add('ticket__info-qr');
+    }
+  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
@@ -61942,9 +61956,8 @@ function (_Component) {
       }, new Date(this.state.showtime.start_time).toLocaleTimeString('ru-RU', {
         hour: '2-digit',
         minute: '2-digit'
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-        className: "ticket__info-qr",
-        src: "i/qr-code.png"
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "code"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "ticket__hint"
       }, "\u041F\u043E\u043A\u0430\u0436\u0438\u0442\u0435 QR-\u043A\u043E\u0434 \u043D\u0430\u0448\u0435\u043C\u0443 \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u043B\u0435\u0440\u0443 \u0434\u043B\u044F \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u0431\u0440\u043E\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {

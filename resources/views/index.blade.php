@@ -18,6 +18,9 @@
 
   <div id="client"></div>
 
+  <script src="js/jquery.min.js"></script>
+  <script src="js/qrcode.min.js"></script>
+
   <script src="{{mix('js/app.js')}}"></script>
 </body>
 </html>

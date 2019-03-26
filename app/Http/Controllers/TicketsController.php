@@ -52,7 +52,17 @@ class TicketsController extends Controller
             ]);
         }
 
-        return response('Ticket added');
+        // Set QR code
+        $url = $request->getHost();
+        $tid = $ticket->id;
+        $places = implode(',', $data['places']);
+        $timestamp = (new \DateTime())->getTimestamp();
+
+        $ticket->qr_code = "{$url}:/{$tid}?{$places}&{$timestamp}";
+        $ticket->save();
+
+        return response($ticket->qr_code)
+            ->header('Content-Type', 'text/plain');
     }
 
     /**

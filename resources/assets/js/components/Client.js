@@ -21,6 +21,7 @@ class Client extends Component {
       hall:       null,       // Chosen hall
       showtime:   null,       // Chosen showtime
       places:     {},         // Places matrix on scheme
+      qrCode:     null,       // QR Code string
       step:       0,          /* Step of booking:
                                   0 - showtime choosing,
                                   1 - place choosing
@@ -195,8 +196,11 @@ class Client extends Component {
       },
       body: JSON.stringify(ticket)
 
-    }).then(() => {
+    })
+    .then(resp => resp.text())
+    .then(resp => {
       this.setState({
+        qrCode: resp,
         step: 3,
       });
     });     
@@ -303,7 +307,8 @@ class Client extends Component {
         return <ClientPayment hall={this.state.hall} showtime={this.state.showtime} places={this.state.places} 
           handlePayment={this.handlePayment} countPrice={this.countPrice}  stringifyPlaces={this.stringifyPlaces} />
       case 3:
-        return <ClientTicket showtime={this.state.showtime} places={this.state.places} stringifyPlaces={this.stringifyPlaces} />        
+        return <ClientTicket showtime={this.state.showtime} places={this.state.places} 
+          stringifyPlaces={this.stringifyPlaces} qrCode={this.state.qrCode} />        
       default: 
         return null
     }

@@ -13,7 +13,18 @@ export default class ClientTicket extends Component {
     }
   }
 
+  componentDidMount() {
+    // Making a QR Code image
+
+    const wrapper = document.getElementById('code');
+
+    new QRCode(wrapper, this.props.qrCode);
+
+    wrapper.querySelector('img').classList.add('ticket__info-qr')
+  }
+
   render() {
+
     return (
       <main>
         <section className="ticket">
@@ -28,7 +39,7 @@ export default class ClientTicket extends Component {
             <p className="ticket__info">В зале: <span className="ticket__details ticket__hall">{this.state.showtime.hall.title}</span></p>
             <p className="ticket__info">Начало сеанса: <span className="ticket__details ticket__start">{ (new Date(this.state.showtime.start_time)).toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})}</span></p>
 
-            <img className="ticket__info-qr" src="i/qr-code.png" />
+            <div id="code"></div>
 
             <p className="ticket__hint">Покажите QR-код нашему контроллеру для подтверждения бронирования.</p>
             <p className="ticket__hint">Приятного просмотра!</p>
