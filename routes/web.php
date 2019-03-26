@@ -36,6 +36,7 @@ Route::post('/place-type-prices/add/{hallId}', 'PlaceTypePricesController@store'
 Route::post('/place-type-prices/edit/{hallId}', 'PlaceTypePricesController@update')->name('place_type_prices_edit');
 
 Route::post('/movies/add', 'MoviesController@store')->name('movies_add');
+Route::post('/movies/edit/{id}', 'MoviesController@update')->name('movies_edit');
 Route::post('/movies/list', 'MoviesController@show')->name('movies_list');
 Route::post('/movies/delete/{id}', 'MoviesController@destroy')->name('movies_delete');
 

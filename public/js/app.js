@@ -63989,7 +63989,7 @@ function (_Component) {
     value: function render() {
       var title = null;
 
-      if (this.props.deletedMovie !== undefined) {
+      if (this.props.deletedMovie && this.props.deletedMovie !== undefined) {
         title = this.props.deletedMovie.title;
       }
 
@@ -64139,6 +64139,293 @@ function (_Component) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/components/MovieEditForm.js":
+/*!*********************************************************!*\
+  !*** ./resources/assets/js/components/MovieEditForm.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MovieEditForm; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+/**
+ * Movie adding form
+ */
+
+var MovieEditForm =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(MovieEditForm, _Component);
+
+  function MovieEditForm(props) {
+    var _this;
+
+    _classCallCheck(this, MovieEditForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(MovieEditForm).call(this, props));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  } // /**
+  //  * Preview uploaded image file
+  //  */
+  // previewFile() {
+  //   let preview = document.getElementById('preview');
+  //   let file    = document.querySelector('input[name="image"]').files[0];
+  //   let reader  = new FileReader();
+  //   reader.onloadend = function () {
+  //       preview.src = reader.result;
+  //   }
+  //   if (file) {
+  //       reader.readAsDataURL(file);
+  //   } else {
+  //       preview.src = "";
+  //   }      
+  // }
+
+  /**
+   * Handle form submit
+   * @param {Event} e
+   */
+
+
+  _createClass(MovieEditForm, [{
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      console.log('Editing');
+      var formData = new FormData(e.target);
+      fetch("/movies/edit/".concat(this.props.editedMovie.id), {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+      }).then(function () {
+        return document.location.reload();
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      console.log(this.props.editedMovie);
+      if (!this.props.editedMovie) return null;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        action: "add_movie",
+        method: "post",
+        acceptCharset: "utf-8",
+        onSubmit: this.handleSubmit
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label conf-step__label-fullsize",
+        htmlFor: "title"
+      }, "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0444\u0438\u043B\u044C\u043C\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "conf-step__input",
+        defaultValue: this.props.editedMovie.title,
+        type: "text",
+        placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \xAB\u0413\u0440\u0430\u0436\u0434\u0430\u043D\u0438\u043D \u041A\u0435\u0439\u043D\xBB",
+        name: "title",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label conf-step__label-fullsize",
+        htmlFor: "country"
+      }, "\u0421\u0442\u0440\u0430\u043D\u0430 \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u044F", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "conf-step__input",
+        defaultValue: this.props.editedMovie.country,
+        type: "text",
+        placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \xAB\u0421\u0428\u0410\xBB",
+        name: "country",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label conf-step__label-fullsize",
+        htmlFor: "description"
+      }, "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435(\u0441\u0438\u043D\u043E\u043F\u0441\u0438\u0441) \u0444\u0438\u043B\u044C\u043C\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+        className: "conf-step__input",
+        type: "text",
+        name: "description",
+        defaultValue: this.props.editedMovie.description,
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "conf-step__label conf-step__label-fullsize",
+        htmlFor: "duration"
+      }, "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C, \u043C\u0438\u043D.", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "conf-step__input",
+        defaultValue: this.props.editedMovie.duration,
+        type: "number",
+        min: "0",
+        name: "duration",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        id: "preview",
+        src: "i/posters/".concat(this.props.editedMovie.id, ".jpg"),
+        height: "150"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "conf-step__buttons text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "submit",
+        defaultValue: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C",
+        className: "conf-step__button conf-step__button-accent"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-regular",
+        onClick: this.props.handler
+      }, "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "conf-step__button conf-step__button-danger",
+        onClick: this.props.handleDelete
+      }, "\u0423\u0434\u0430\u043B\u0438\u0442\u044C")));
+    }
+  }]);
+
+  return MovieEditForm;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/MovieEditPopup.js":
+/*!**********************************************************!*\
+  !*** ./resources/assets/js/components/MovieEditPopup.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MovieEditPopup; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _MovieEditForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MovieEditForm */ "./resources/assets/js/components/MovieEditForm.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+/**
+ * Movie adding popup on admin page
+ */
+
+var MovieEditPopup =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(MovieEditPopup, _Component);
+
+  function MovieEditPopup(props) {
+    var _this;
+
+    _classCallCheck(this, MovieEditPopup);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(MovieEditPopup).call(this, props));
+    _this.state = {
+      active: _this.props.active // Popup show status
+
+    };
+    _this.close = _this.close.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+  /**
+   * Popup close handling
+   * @param {Event} e
+   */
+
+
+  _createClass(MovieEditPopup, [{
+    key: "close",
+    value: function close(e) {
+      if (e !== undefined) {
+        // Popup closed manually
+        e.preventDefault();
+      }
+
+      this.setState({
+        active: false
+      });
+      this.props.resetPopups();
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(props) {
+      this.setState({
+        active: props.active
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var className = "popup";
+
+      if (this.state.active) {
+        className += " active";
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: className
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__content"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__header"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "popup__title"
+      }, "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0444\u0438\u043B\u044C\u043C\u0430", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        className: "popup__dismiss",
+        href: "#",
+        onClick: this.close
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "i/close.png",
+        alt: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "popup__wrapper"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieEditForm__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        handler: this.close,
+        editedMovie: this.props.editedMovie,
+        handleDelete: this.props.handleDelete
+      })))));
+    }
+  }]);
+
+  return MovieEditPopup;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/components/MovieManagementBlock.js":
 /*!****************************************************************!*\
   !*** ./resources/assets/js/components/MovieManagementBlock.js ***!
@@ -64154,9 +64441,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _MovieAddPopup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MovieAddPopup */ "./resources/assets/js/components/MovieAddPopup.js");
-/* harmony import */ var _MovieDeletePopup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MovieDeletePopup */ "./resources/assets/js/components/MovieDeletePopup.js");
-/* harmony import */ var _ShowtimeAddPopup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ShowtimeAddPopup */ "./resources/assets/js/components/ShowtimeAddPopup.js");
-/* harmony import */ var _ShowtimeDeletePopup__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ShowtimeDeletePopup */ "./resources/assets/js/components/ShowtimeDeletePopup.js");
+/* harmony import */ var _MovieEditPopup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MovieEditPopup */ "./resources/assets/js/components/MovieEditPopup.js");
+/* harmony import */ var _MovieDeletePopup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MovieDeletePopup */ "./resources/assets/js/components/MovieDeletePopup.js");
+/* harmony import */ var _ShowtimeAddPopup__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ShowtimeAddPopup */ "./resources/assets/js/components/ShowtimeAddPopup.js");
+/* harmony import */ var _ShowtimeDeletePopup__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ShowtimeDeletePopup */ "./resources/assets/js/components/ShowtimeDeletePopup.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
@@ -64182,6 +64470,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 
 
 
@@ -64217,6 +64506,7 @@ function (_Component) {
       // Movie Create Popup active status
       deletePopupOn: false,
       // Movie Delete Popup active status
+      editPopupOn: false,
       createStPopupOn: false,
       // Showtime Create Popup active status
       deleteStPopupOn: false,
@@ -64238,6 +64528,7 @@ function (_Component) {
     _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleChangeHall = _this.handleChangeHall.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleChangeTime = _this.handleChangeTime.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.resetPopups = _this.resetPopups.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.save = _this.save.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.cancel = _this.cancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.reInit = _this.reInit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -64352,7 +64643,7 @@ function (_Component) {
           className: "conf-step__movie",
           onDragStart: _this3.handleDragStart,
           onDoubleClick: function onDoubleClick(e) {
-            return _this3.handleDeleteClick(el, e);
+            return _this3.handleEditClick(el, e);
           },
           "data-id": el.id,
           "data-title": el.title,
@@ -64501,17 +64792,32 @@ function (_Component) {
       });
     }
     /**
-     * Handle Movie node double click
+     * Handle Movie delete link click
      * @param {Object} el
      * @param {Event} e
      */
 
   }, {
     key: "handleDeleteClick",
-    value: function handleDeleteClick(el, e) {
+    value: function handleDeleteClick(e) {
       this.setState({
+        editPopupOn: false,
         deletePopupOn: true,
-        deletedMovie: el
+        deletedMovie: this.state.editedMovie
+      });
+    }
+    /**
+     * Handle Movie node double click
+     * @param {Object} el
+     * @param {Event} e
+     */
+
+  }, {
+    key: "handleEditClick",
+    value: function handleEditClick(el, e) {
+      this.setState({
+        editPopupOn: true,
+        editedMovie: el
       });
     }
     /**
@@ -64635,6 +64941,19 @@ function (_Component) {
       this.setState({
         stData: data
       });
+    }
+  }, {
+    key: "resetPopups",
+    value: function resetPopups() {
+      this.setState({
+        createPopupOn: false,
+        deletePopupOn: false,
+        editPopupOn: false,
+        createStPopupOn: false,
+        deleteStPopupOn: false,
+        deletedMovie: null,
+        editedMovie: null
+      });
     } // ======= Events ======
 
   }, {
@@ -64645,10 +64964,15 @@ function (_Component) {
       if (document.getElementById('popups_movies')) {
         react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieAddPopup__WEBPACK_IMPORTED_MODULE_2__["default"], {
           active: this.state.createPopupOn
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieDeletePopup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieDeletePopup__WEBPACK_IMPORTED_MODULE_4__["default"], {
           active: this.state.deletePopupOn,
           deletedMovie: this.state.deletedMovie
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeAddPopup__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MovieEditPopup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          active: this.state.editPopupOn,
+          editedMovie: this.state.editedMovie,
+          resetPopups: this.resetPopups,
+          handleDelete: this.handleDeleteClick
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeAddPopup__WEBPACK_IMPORTED_MODULE_5__["default"], {
           active: this.state.createStPopupOn,
           halls: this.props.data,
           data: this.state.stData,
@@ -64659,7 +64983,7 @@ function (_Component) {
           },
           handleChangeHall: this.handleChangeHall,
           handleChangeTime: this.handleChangeTime
-        }), "}", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeDeletePopup__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        }), "}", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ShowtimeDeletePopup__WEBPACK_IMPORTED_MODULE_6__["default"], {
           active: this.state.deleteStPopupOn,
           deletedShowtime: this.state.deletedShowtime
         })), document.getElementById('popups_movies'));

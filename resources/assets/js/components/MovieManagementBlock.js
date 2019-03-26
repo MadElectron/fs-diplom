@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import MovieAddPopup from './MovieAddPopup';
+import MovieEditPopup from './MovieEditPopup';
 import MovieDeletePopup from './MovieDeletePopup';
 import ShowtimeAddPopup from './ShowtimeAddPopup';
 import ShowtimeDeletePopup from './ShowtimeDeletePopup';
@@ -24,8 +25,10 @@ export default class MovieMangementBlock extends Component {
       this.state = {
         createPopupOn: false,     // Movie Create Popup active status
         deletePopupOn: false,     // Movie Delete Popup active status
+        editPopupOn: false,
         createStPopupOn: false,   // Showtime Create Popup active status
         deleteStPopupOn: false,   // Showtime Delete Popup active status
+
 
         data: null,               
         deleteId: null,           // Deleted showtime id
@@ -42,6 +45,8 @@ export default class MovieMangementBlock extends Component {
 
       this.handleChangeHall = this.handleChangeHall.bind(this);
       this.handleChangeTime = this.handleChangeTime.bind(this);
+
+      this.resetPopups = this.resetPopups.bind(this);
 
       this.save = this.save.bind(this);
       this.cancel = this.cancel.bind(this);
@@ -152,7 +157,7 @@ export default class MovieMangementBlock extends Component {
         <div key={index} 
           className="conf-step__movie" 
           onDragStart={this.handleDragStart}
-          onDoubleClick={e => this.handleDeleteClick(el, e)} 
+          onDoubleClick={e => this.handleEditClick(el, e)} 
           data-id={el.id}
           data-title={el.title}
           data-duration={el.duration}
@@ -278,16 +283,30 @@ export default class MovieMangementBlock extends Component {
     }
     
     /**
+     * Handle Movie delete link click
+     * @param {Object} el
+     * @param {Event} e
+     */    
+    handleDeleteClick(e) {
+      this.setState({
+        editPopupOn: false,
+        deletePopupOn: true,
+        deletedMovie: this.state.editedMovie
+      }); 
+    }
+
+    /**
      * Handle Movie node double click
      * @param {Object} el
      * @param {Event} e
      */    
-    handleDeleteClick(el, e) {
+    handleEditClick(el, e) {
       this.setState({
-        deletePopupOn: true,
-        deletedMovie: el
+        editPopupOn: true,
+        editedMovie: el
       }); 
     }
+
 
     /**
      * Handle Showtime node double click
@@ -419,6 +438,18 @@ export default class MovieMangementBlock extends Component {
       });      
     }
 
+    resetPopups() {
+      this.setState({
+        createPopupOn: false,
+        deletePopupOn: false,
+        editPopupOn: false,
+        createStPopupOn: false,
+        deleteStPopupOn: false,
+        deletedMovie: null,
+        editedMovie: null,
+      });
+    }
+
 
 
     // ======= Events ======
@@ -429,7 +460,11 @@ export default class MovieMangementBlock extends Component {
           ReactDOM.render(
             <div>
               <MovieAddPopup active={this.state.createPopupOn}/>
-              <MovieDeletePopup active={this.state.deletePopupOn} deletedMovie={this.state.deletedMovie}/>
+              <MovieDeletePopup active={this.state.deletePopupOn} deletedMovie={this.state.deletedMovie}
+                />
+              <MovieEditPopup active={this.state.editPopupOn} editedMovie={this.state.editedMovie} 
+                resetPopups={this.resetPopups} handleDelete={this.handleDeleteClick} />
+
               <ShowtimeAddPopup active={this.state.createStPopupOn} halls={this.props.data}
                 data={this.state.stData} time={this.state.stTime} reInit={this.reInit} addShowtime={e => this.addShowtime(e)} 
                 handleChangeHall={this.handleChangeHall} handleChangeTime={this.handleChangeTime} />

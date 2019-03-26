@@ -37,7 +37,7 @@ export default class MovieDeleteForm extends Component {
 
       let title = null;
 
-      if (this.props.deletedMovie !== undefined) {
+      if (this.props.deletedMovie && this.props.deletedMovie !== undefined) {
         title = this.props.deletedMovie.title;
       }
 

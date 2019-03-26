@@ -82,7 +82,7 @@ class MoviesController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -94,7 +94,25 @@ class MoviesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $movie = Movie::where('id', '=', $id)->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'country' => $request->country,
+            'duration' => $request->duration,
+        ]);
+
+        $this->validate($request, [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image');
+        //     $name = $movie->id;
+        //     $destinationPath = public_path('/i/posters');
+        //     imagejpeg(imagecreatefromstring(file_get_contents("$image")), "$destinationPath/$name.jpg");
+        // }
+
+        return response('Movie edited');
     }
 
     /**
