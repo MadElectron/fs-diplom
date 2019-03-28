@@ -13,7 +13,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      // user:      null, 
+      user:      null, 
       halls:     null, 
       movies:    null,
       showtimes: null,
@@ -119,9 +119,14 @@ class App extends Component {
 
   // ====== Events ======
   componentWillMount() {
-    // Слишком просто
-    if (!localStorage.getItem('access_token')) {
+    const token = localStorage.getItem('access_token')
+
+    if (!token) {
       document.location.href = '/login'
+    } else {
+      this.setState({
+        user: token 
+      })
     }
   }
 
@@ -157,6 +162,9 @@ class App extends Component {
   }
 
   render() {
+    if (!this.state.user) 
+      return null;
+
     return (
       <div>
         <section className="conf-step">

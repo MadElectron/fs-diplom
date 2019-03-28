@@ -60657,7 +60657,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
-      // user:      null, 
+      user: null,
       halls: null,
       movies: null,
       showtimes: null,
@@ -60775,9 +60775,14 @@ function (_Component) {
   }, {
     key: "componentWillMount",
     value: function componentWillMount() {
-      // Слишком просто
-      if (!localStorage.getItem('access_token')) {
+      var token = localStorage.getItem('access_token');
+
+      if (!token) {
         document.location.href = '/login';
+      } else {
+        this.setState({
+          user: token
+        });
       }
     }
   }, {
@@ -60809,6 +60814,7 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      if (!this.state.user) return null;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
         className: "conf-step"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", {
