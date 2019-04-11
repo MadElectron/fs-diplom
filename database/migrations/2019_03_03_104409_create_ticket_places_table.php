@@ -30,8 +30,8 @@ class CreateTicketPlacesTable extends Migration
     public function down()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->dropForeign(['ticket_id']);
-            $table->dropForeign(['place_id']);
+            // $table->dropForeign(['ticket_id']);
+            // $table->dropForeign(['place_id']);
         });
         
         Schema::dropIfExists('ticket_places');

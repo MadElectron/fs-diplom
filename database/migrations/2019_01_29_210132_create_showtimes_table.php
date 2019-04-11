@@ -35,6 +35,6 @@ class CreateShowtimesTable extends Migration
             $table->dropForeign(['movie_id']);
         });
 
-        Schema::dropIfExists('showtime');
+        Schema::dropIfExists('showtimes');
     }
 }
