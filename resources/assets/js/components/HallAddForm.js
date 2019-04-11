@@ -20,7 +20,7 @@ export default class HallAddForm extends Component {
 
       const formData = new FormData(e.target);
 
-      fetch('/api/auth/login',{
+      fetch('/halls/add',{
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
