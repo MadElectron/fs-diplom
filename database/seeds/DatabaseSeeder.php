@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
             $this->call(AuthTableSeeder::class);
         }
 
-        // $this->call(UsersTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
+        $this->call(HallsTableSeeder::class);
+        $this->call(PlacesTableSeeder::class);
+        $this->call(PlaceTypePricesTableSeeder::class);
+        $this->call(MoviesTableSeeder::class);
+        $this->call(ShowtimesTableSeeder::class);
     }
 }
