@@ -18,38 +18,59 @@ export default class LoginForm extends Component {
     login(e) {
       e.preventDefault();
 
+      console.log('Loggin in');
+
       let formData = new FormData(e.target);
+  
+      this.getSecret()
+        .then(secret => {
 
-      formData.set('grant_type', 'password');
-      formData.set('client_secret', 'O5Wq3Sy8QoEc8i7049WprMBZEpFwzEcWIrMbLORj');
-      formData.set('client_id', 1);
+          formData.set('grant_type', 'password');
+          formData.set('client_secret', secret);
+          formData.set('client_id', 1);
 
 
-      fetch('/api/auth/login',{
+          fetch('/api/auth/login',{
+            method: "POST",
+            headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+            body: formData
+          }).then(
+            resp => resp.json()
+          ).then(
+            resp => {
+              console.log('Login Response')
+              if (resp.error === 'invalid_credentials' ) {
+                this.state.error = "Неверный пользователь или пароль";
+
+                this.forceUpdate();
+              } else {
+                localStorage.setItem('access_token', resp.access_token);
+
+                document.location.href = '/admin';
+              }
+            }
+          );
+        });
+
+
+    }
+
+    getSecret() {
+      return fetch('/secret/1',{
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         },
-        body: formData
       }).then(
-        resp => resp.json()
-      ).then(
-        resp => {
-          if (resp.error === 'invalid_credentials' ) {
-            this.state.error = "Неверный пользователь или пароль";
-
-            this.forceUpdate();
-          } else {
-            localStorage.setItem('access_token', resp.access_token);
-
-            document.location.href = '/admin';
-          }
-        }
+        resp => resp.text()
       );
     }
 
     componentWillMount() {
-      if (localStorage.getItem('access_token')) {
+      const token = localStorage.getItem('access_token');
+      if (token && token !== "undefined") {
           document.location.href = '/admin';
       }
     }
@@ -62,7 +83,7 @@ export default class LoginForm extends Component {
           </header>
           <div className="login__wrapper">
             <p className="login__error">{this.state.error}</p>
-            <form className="login__form" action="login_submit" method="post" acceptCharset="utf-8" onSubmit={this.login}>
+            <form className="login__form" method="post" acceptCharset="utf-8" onSubmit={this.login}>
               <label className="login__label" htmlFor="username">
                 E-mail
                 <input className="login__input" type="mail" placeholder="example@domain.xyz" name="username" required />

@@ -49,3 +49,4 @@ Route::post('/tickets/add', 'TicketsController@store')->name('tickets_add');
 Route::post('/tickets/list', 'TicketsController@show')->name('tickets_list');
 Route::post('/tickets/{id}', 'TicketsController@show')->name('ticket');
 
+Route::post('/secret/{id}', 'LoginController@getClientSecret')->name('secret');

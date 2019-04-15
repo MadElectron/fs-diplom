@@ -119,10 +119,11 @@ class App extends Component {
 
   // ====== Events ======
   componentWillMount() {
-    const token = localStorage.getItem('access_token')
+    const token = localStorage.getItem('access_token');
 
-    if (!token) {
-      document.location.href = '/login'
+
+    if (!token || token === "undefined") {
+      document.location.href = '/login';
     } else {
       this.setState({
         user: token 

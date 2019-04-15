@@ -60777,7 +60777,7 @@ function (_Component) {
     value: function componentWillMount() {
       var token = localStorage.getItem('access_token');
 
-      if (!token) {
+      if (!token || token === "undefined") {
         document.location.href = '/login';
       } else {
         this.setState({
@@ -62039,7 +62039,7 @@ function (_Component) {
     value: function handleSubmit(e) {
       e.preventDefault();
       var formData = new FormData(e.target);
-      fetch('/api/auth/login', {
+      fetch('/halls/add', {
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -63543,33 +63543,52 @@ function (_Component) {
       var _this2 = this;
 
       e.preventDefault();
+      console.log('Loggin in');
       var formData = new FormData(e.target);
-      formData.set('grant_type', 'password');
-      formData.set('client_secret', 'O5Wq3Sy8QoEc8i7049WprMBZEpFwzEcWIrMbLORj');
-      formData.set('client_id', 1);
-      fetch('/api/auth/login', {
+      this.getSecret().then(function (secret) {
+        formData.set('grant_type', 'password');
+        formData.set('client_secret', secret);
+        formData.set('client_id', 1);
+        fetch('/api/auth/login', {
+          method: "POST",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          },
+          body: formData
+        }).then(function (resp) {
+          return resp.json();
+        }).then(function (resp) {
+          console.log('Login Response');
+
+          if (resp.error === 'invalid_credentials') {
+            _this2.state.error = "Неверный пользователь или пароль";
+
+            _this2.forceUpdate();
+          } else {
+            localStorage.setItem('access_token', resp.access_token);
+            document.location.href = '/admin';
+          }
+        });
+      });
+    }
+  }, {
+    key: "getSecret",
+    value: function getSecret() {
+      return fetch('/secret/1', {
         method: "POST",
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: formData
-      }).then(function (resp) {
-        return resp.json();
-      }).then(function (resp) {
-        if (resp.error === 'invalid_credentials') {
-          _this2.state.error = "Неверный пользователь или пароль";
-
-          _this2.forceUpdate();
-        } else {
-          localStorage.setItem('access_token', resp.access_token);
-          document.location.href = '/admin';
         }
+      }).then(function (resp) {
+        return resp.text();
       });
     }
   }, {
     key: "componentWillMount",
     value: function componentWillMount() {
-      if (localStorage.getItem('access_token')) {
+      var token = localStorage.getItem('access_token');
+
+      if (token && token !== "undefined") {
         document.location.href = '/admin';
       }
     }
@@ -63588,7 +63607,6 @@ function (_Component) {
         className: "login__error"
       }, this.state.error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         className: "login__form",
-        action: "login_submit",
         method: "post",
         acceptCharset: "utf-8",
         onSubmit: this.login
